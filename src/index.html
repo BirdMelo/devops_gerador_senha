@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-br" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Senhas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>GERADOR DE SENHAS</h1>
+        <button><img src="./img/dark_mode_icon.svg" alt="modo claro"></button>
+    </header>
+    <main>
+        <div class="password_container">
+            <span class="password_return"></span>
+            <button class="btn_copy_password"><img src="./img/copy_light_mode.svg" alt="copiar"></button>
+        </div>
+        <hr>
+        <form action="" method="get">
+            <div class="field_length">
+                <label for="password_length">tamanho de senha:</label>
+                <input type="number" name="password_length" id="password_length">
+            </div>
+            <fieldset class="field_options">
+                <legend>Tipo de senha:</legend>
+                <div class="options_alphanumeric">
+                    <input class="password_radio" type="radio" name="password" id="password_alphanumeric" value="password_alphanumeric">
+                    <label class="password_radio" for="password_alphanumeric">Alfanúmerico</label>
+                </div>
+                <div class="options_numeric">
+                    <input class="password_radio" type="radio" name="password" id="password_numeric" value="password_numeric">
+                    <label class="password_radio" for="password_numeric">Númerico</label>
+                </div>
+            </fieldset>
+        </form>
+    </main>
+</body>
+</html>
