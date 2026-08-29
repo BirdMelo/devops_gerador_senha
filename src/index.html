@@ -1,39 +1,86 @@
 <!DOCTYPE html>
 <html lang="pt-br" data-theme="light">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerador de Senhas</title>
+
     <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
 </head>
+
 <body>
     <header>
         <h1>GERADOR DE SENHAS</h1>
-        <button><img src="./img/dark_mode_icon.svg" alt="modo claro"></button>
+
+        <button type="button" id="btn_theme">
+            <img id="theme_icon" src="./img/dark_mode_icon.svg" alt="Ativar modo escuro">
+        </button>
     </header>
+
     <main>
         <div class="password_container">
             <span class="password_return"></span>
-            <button class="btn_copy_password"><img src="./img/copy_light_mode.svg" alt="copiar"></button>
+
+            <button type="button" class="btn_copy_password" id="btn_copy_password">
+                <img id="copy_icon" src="./img/copy_light_mode.svg" alt="Copiar senha">
+            </button>
         </div>
+
         <hr>
-        <form action="" method="get">
+
+        <form id="password_form">
             <div class="field_length">
-                <label for="password_length">tamanho de senha:</label>
-                <input type="number" name="password_length" id="password_length">
+                <label for="password_length">Tamanho da senha:</label>
+
+                <input type="number" name="password_length" id="password_length" min="1" max="50" required>
             </div>
+
             <fieldset class="field_options">
-                <legend>Tipo de senha:</legend>
-                <div class="options_alphanumeric">
-                    <input class="password_radio" type="radio" name="password" id="password_alphanumeric" value="password_alphanumeric">
-                    <label class="password_radio" for="password_alphanumeric">Alfanúmerico</label>
+                <legend>Opções de senha:</legend>
+
+                <div class="options_container">
+                    <div class="option">
+                        <input class="password_checkbox" type="checkbox" name="uppercase" id="password_uppercase">
+                        <label for="password_uppercase">
+                            Letras maiúsculas
+                        </label>
+                    </div>
+
+                    <div class="option">
+                        <input class="password_checkbox" type="checkbox" name="lowercase" id="password_lowercase">
+                        <label for="password_lowercase">
+                            Letras minúsculas
+                        </label>
+                    </div>
                 </div>
-                <div class="options_numeric">
-                    <input class="password_radio" type="radio" name="password" id="password_numeric" value="password_numeric">
-                    <label class="password_radio" for="password_numeric">Númerico</label>
+
+                <div class="options_container">
+                    <div class="option">
+                        <input class="password_checkbox" type="checkbox" name="numeric" id="password_numeric">
+                        <label for="password_numeric">
+                            Números
+                        </label>
+                    </div>
+
+                    <div class="option">
+                        <input class="password_checkbox" type="checkbox" name="special" id="password_special">
+                        <label for="password_special">
+                            Caracteres especiais
+                        </label>
+                    </div>
                 </div>
             </fieldset>
+
+            <button type="submit" class="generate_btn" id="btn_generate_password">
+                Gerar senha
+            </button>
         </form>
+        <button type="button" class="generate_btn" id="btn_quick_password">
+            Senha rápida
+        </button>
     </main>
 </body>
+
 </html>

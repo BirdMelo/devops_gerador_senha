@@ -1,41 +1,36 @@
 :root {
-    /*COLOR*/
-    --color_background:#e9e9e9;
-    --color_text:#000;
-    --color_itens:#000;
-    --color_bg_hl:#e9e9e9;
-    --color_bg_select:#141414;
+    /* COLOR */
+    --color_background: #e9e9e9;
+    --color_text: #000;
+    --color_itens: #000;
+    --color_bg_hl: #e9e9e9;
+    --color_bg_select: #141414;
 
-    /*FONT*/
+    /* FONT */
     --font_text: Arial, Helvetica, sans-serif;
 }
-
-/*DARK MODE*/
+/* DARK MODE */
 [data-theme="dark"] {
-    --color_background:#0d0d0f;
-    --color_text:#fff;
-    --color_itens:#fff;
+    --color_background: #0d0d0f;
+    --color_text: #fff;
+    --color_itens: #fff;
     --color_bg_hl: #141414;
-    --color_bg_select:#e9e9e9;
+    --color_bg_select: #e9e9e9;
 }
-
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
-
 body {
     background-color: var(--color_background);
     font-family: var(--font_text);
     color: var(--color_text);
 }
-
 header h1 {
     text-align: center;
     margin-bottom: 50px;
 }
-
 header button {
     position: absolute;
     right: 16px;
@@ -45,10 +40,9 @@ header button {
     border-radius: 100%;
     padding: 3.5px 5px;
 }
-
 main {
     display: flex;
-    flex-direction:column;
+    flex-direction: column;
     width: fit-content;
     margin: auto;
     padding: 16px;
@@ -66,11 +60,18 @@ main {
     height: 27px;
     border-radius: 8px 0 0 8px;
     background-color: var(--color_bg_hl);
+
+    /*Esconde parte da senha caso seja grande demais*/
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 .btn_copy_password {
     height: 27px;
     border-radius: 0 8px 8px 0;
     border: 2px solid var(--color_itens);
+    border-left: 0px;
+    background-color: var(--color_background);
     cursor: pointer;
 }
 form {
@@ -85,26 +86,55 @@ form {
     color: var(--color_text);
     padding: 4px 6px;
     border-radius: 16px;
+    width: 50%;
 }
+.field_length {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Estilização das opções de personalização */
+
 .field_options {
     border: none;
     display: flex;
-    justify-content: space-around;
+    flex-direction: column;
+    gap: 10px;
 }
 .field_options legend {
-    margin-bottom: 16px;
+    margin-bottom: 6px;
 }
-.options_alphanumeric input, .options_numeric input {
+.options_container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+.option {
+    flex: 1;
+}
+.option input {
     display: none;
 }
-.options_alphanumeric label, .options_numeric label {
+.option label {
+    display: block;
     border: solid 2px var(--color_itens);
     border-radius: 16px;
-    padding: 2px 6px;
+    padding: 4px 8px;
     cursor: pointer;
+    text-align: center;
 }
-.options_alphanumeric input:checked + label,
- .options_numeric input:checked + label {
+.option input:checked + label {
     background-color: var(--color_bg_select);
     color: var(--color_background);
+}
+
+/* Estilização dos botões de geração */
+.generate_btn {
+    background-color: var(--color_background);
+    color: var(--color_text);
+    border-radius: 10px;
+    padding: 4px 0 4px 0;
+}
+#btn_quick_password {
+    margin-top: 10px;
 }
