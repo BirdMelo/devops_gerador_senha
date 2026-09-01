@@ -77,3 +77,43 @@ O projeto é composto por três frentes principais:
 ## Testes Automatizados
 
 Os testes são executados automaticamente pelo workflow definido em `.github/workflow/ci.yml` a cada alteração enviada ao repositório, garantindo o funcionamento contínuo da aplicação.
+
+
+## Estratégia de Ramificação
+
+O projeto utiliza a estratégia **Trunk-Based Development (Trunk-Based)**,
+tendo a branch `main` como branch principal do projeto.
+
+As alterações são desenvolvidas em branches curtas e específicas,
+sendo posteriormente integradas à `main` por meio de Pull Requests.
+
+### Padrão de nomenclatura das branches
+
+| Prefixo | Uso | Exemplo |
+|---|---|---|
+| `feature/` | Novas funcionalidades | `feature/html-css` |
+| `fix/` | Correções de bugs | `fix/erro-senha` |
+| `chore/` | Manutenção, configurações e dependências | `chore/config-ci` |
+
+As branches devem ser criadas para uma atividade específica e,
+após a conclusão da tarefa e revisão por Pull Request, devem ser
+integradas à branch `main`.
+
+### Padrão de commits
+
+Os commits devem utilizar prefixos que indiquem o tipo de alteração:
+
+- `feat:` — nova funcionalidade;
+- `fix:` — correção de bug;
+- `chore:` — manutenção ou configuração;
+- `test:` — criação ou alteração de testes;
+- `docs:` — alteração na documentação.
+
+Exemplos:
+
+```text
+feat: adiciona gerador de senha
+fix: corrige geração de senha numérica
+chore: configura pipeline de CI
+test: adiciona testes do gerador
+docs: atualiza documentação
