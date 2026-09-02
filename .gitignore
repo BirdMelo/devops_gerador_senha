@@ -4,3 +4,6 @@
 # Sistema operacional
 .DS_Store
 Thumbs.db
+
+# Modulos do Node
+node_modules
