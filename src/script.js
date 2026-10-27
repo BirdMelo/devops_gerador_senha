@@ -66,7 +66,7 @@ function generatePassword() {
 
     return password;
 }
-// Gera senha não personalizada
+// Gera senha não personalizada, 15 caracteres com todos os tipos de caracteres
 function generateQuickPassword() {
     const characters = uppercase + lowercase + numbers + symbols;
 
@@ -214,23 +214,136 @@ const emptyVault = document.getElementById("empty_vault");
 addPasswordForm.addEventListener("submit", (event) => {
     event.preventDefault();
 
-    const service = document.getElementById("service_name").value;
-    const description = document.getElementById("service_description").value;
-    const password = document.getElementById("saved_password").value;
+    let service = document.getElementById("service_name").value;
+let description = document.getElementById("service_description").value;
+let password = document.getElementById("saved_password").value;
 
-    savedPasswords.push({
-        service: service,
-        description: description,
-        password: password
-    });
+const savedPassword = {
+    service: service,
+    description: description,
+    password: password
+};
+
+savedPasswords.push(savedPassword);
 
     const passwordItem = document.createElement("div");
 
     passwordItem.innerHTML = `
-        <h3>${service}</h3>
-        <p>${description}</p>
-        <p>Senha: ${password}</p>
-    `;
+    <h3>${service}</h3>
+    <p>${description}</p>
+    <p>Senha: <span class="password_value">••••••••</span></p>
+    <button type="button" class="toggle_password">Mostrar senha</button>
+`;
+
+let passwordVisible = false;
+
+const passwordText = passwordItem.querySelector(".password_value");
+const toggleButton = passwordItem.querySelector(".toggle_password");
+// só mostrar a senha quando clicar no botão 
+toggleButton.addEventListener("click", () => {
+    passwordVisible = !passwordVisible;
+
+    if (passwordVisible) {
+        passwordText.textContent = password;
+        toggleButton.textContent = "Ocultar senha";
+    } else {
+        passwordText.textContent = "••••••••";
+        toggleButton.textContent = "Mostrar senha";
+    }
+});
+//botão de copiar (copiar sem precisar mostrar a senha)
+const copyButton = document.createElement("button");
+
+copyButton.type = "button";
+copyButton.textContent = "Copiar";
+
+copyButton.addEventListener("click", async () => {
+    try {
+        await navigator.clipboard.writeText(password);
+        alert("Senha copiada!");
+    } catch (error) {
+        alert("Não foi possível copiar a senha.");
+    }
+});
+
+passwordItem.appendChild(copyButton);
+
+//botao para editar senha
+
+const editButton = document.createElement("button");
+
+editButton.type = "button";
+editButton.textContent = "Editar";
+
+editButton.addEventListener("click", () => {
+    const newService = prompt("Nome do serviço:", service);
+
+    if (newService === null || newService.trim() === "") {
+        return;
+    }
+
+    const newDescription = prompt("Descrição:", description);
+
+    if (newDescription === null) {
+        return;
+    }
+
+    const newPassword = prompt("Nova senha:", password);
+
+    if (newPassword === null || newPassword === "") {
+        return;
+    }
+
+    service = newService.trim();
+    description = newDescription.trim();
+    password = newPassword;
+
+    savedPassword.service = service;
+    savedPassword.description = description;
+    savedPassword.password = password;
+
+    passwordItem.querySelector("h3").textContent = service;
+    passwordItem.querySelector("p").textContent = description;
+
+    passwordVisible = false;
+    passwordText.textContent = "••••••••";
+    toggleButton.textContent = "Mostrar senha";
+
+    searchInput.dispatchEvent(new Event("input"));
+});
+
+
+
+passwordItem.appendChild(editButton);
+// Botão para excluir senha
+const deleteButton = document.createElement("button");
+
+deleteButton.type = "button";
+deleteButton.textContent = "Excluir";
+
+deleteButton.addEventListener("click", () => {
+    const confirmDelete = confirm("Tem certeza que deseja excluir esta senha?");
+
+    if (confirmDelete) {
+        passwordItem.remove();
+
+        const index = savedPasswords.findIndex((item) =>
+            item.service === service &&
+            item.description === description &&
+            item.password === password
+        );
+
+        if (index !== -1) {
+            savedPasswords.splice(index, 1);
+        }
+
+        if (passwordList.querySelectorAll(":scope > div").length === 0) {
+            emptyVault.hidden = false;
+        }
+    }
+});
+
+passwordItem.appendChild(deleteButton);
 
     passwordList.appendChild(passwordItem);
 
@@ -241,4 +354,62 @@ addPasswordForm.addEventListener("submit", (event) => {
     vaultScreen.hidden = false;
 
     alert("Senha adicionada com sucesso!");
+});
+
+// pesquisar "nome" da senha
+
+const searchInput = document.getElementById("search_password");
+
+searchInput.addEventListener("input", () => {
+    const searchTerm = searchInput.value.toLowerCase();
+
+    const passwordItems = passwordList.querySelectorAll(":scope > div");
+
+    passwordItems.forEach((item) => {
+        const serviceName = item.querySelector("h3").textContent.toLowerCase();
+
+        if (serviceName.includes(searchTerm)) {
+            item.hidden = false;
+        } else {
+            item.hidden = true;
+        }
+    });
+});
+// Abrir o gerador de senhas
+const openGeneratorButton = document.getElementById("btn_open_generator");
+const generatorHeader = document.getElementById("generator_header");
+const generatorScreen = document.getElementById("generator_screen");
+
+openGeneratorButton.addEventListener("click", () => {
+    vaultScreen.hidden = true;
+    generatorHeader.hidden = false;
+    generatorScreen.hidden = false;
+});
+
+// Voltar a tela principal
+const backVaultButton = document.getElementById("btn_back_vault");
+
+backVaultButton.addEventListener("click", () => {
+    generatorHeader.hidden = true;
+    generatorScreen.hidden = true;
+    vaultScreen.hidden = false;
+});
+// Usar a senha gerada no cadastro
+const usePasswordButton = document.getElementById("btn_use_password");
+
+usePasswordButton.addEventListener("click", () => {
+    const generatedPassword = passwordReturn.textContent;
+
+    if (generatedPassword === "") {
+        alert("Gere uma senha primeiro!");
+        return;
+    }
+
+    generatorHeader.hidden = true;
+    generatorScreen.hidden = true;
+
+    vaultScreen.hidden = true;
+    addPasswordScreen.hidden = false;
+
+    document.getElementById("saved_password").value = generatedPassword;
 });

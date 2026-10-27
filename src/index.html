@@ -107,6 +107,10 @@
     <button type="button" id="btn_add_password">
         + Adicionar senha
     </button>
+    
+    <button type="button" id="btn_open_generator">
+    Gerar senha
+</button>
 
     <section id="password_list">
         <p id="empty_vault">
@@ -119,7 +123,7 @@
     </button>
 </main>
 
-    <header hidden>
+    <header id="generator_header" hidden>
         <h1>GERADOR DE SENHAS</h1>
 
         <button type="button" id="btn_theme">
@@ -127,7 +131,7 @@
         </button>
     </header>
 
-    <main hidden>
+    <main id="generator_screen" hidden>
         <div class="password_container">
             <span class="password_return"></span>
 
@@ -188,6 +192,13 @@
         <button type="button" class="generate_btn" id="btn_quick_password">
             Senha rápida
         </button>
+<button type="button" id="btn_use_password">
+    Usar senha gerada
+</button>
+
+        <button type="button" id="btn_back_vault">
+    Voltar ao cofre
+</button>
     </main>
 </body>
 

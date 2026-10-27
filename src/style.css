@@ -93,7 +93,14 @@ form {
 }
 .field_length {
     display: flex;
+    align-items: center;
     justify-content: space-between;
+    gap: 15px;
+}
+
+.field_length label {
+    font-size: 17px;
+    font-weight: 600;
 }
 
 /* Estilização das opções de personalização */
@@ -105,8 +112,11 @@ form {
     gap: 10px;
 }
 .field_options legend {
-    margin-bottom: 6px;
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: 600;
 }
+
 .options_container {
     display: flex;
     justify-content: space-between;
@@ -122,9 +132,10 @@ form {
     display: block;
     border: solid 2px var(--color_itens);
     border-radius: 16px;
-    padding: 4px 8px;
+    padding: 10px 8px;
     cursor: pointer;
     text-align: center;
+    font-size: 15px;
 }
 .option input:checked + label {
     background-color: var(--color_bg_select);
@@ -145,12 +156,8 @@ form {
 /*  login */
 
 #login_screen {
-    width: 440px;
-    max-width: 90%;
     min-height: 350px;
-    margin: 55px auto;
-    padding: 35px;
-    gap: 25px;
+
 }
 
 #login_screen h2 {
@@ -264,4 +271,41 @@ form {
 body > header {
     padding-top: 20px;
     margin-top: 15px;
+}
+/* BOTÕES DE MOSTRAR E COPIAR SENHA */
+
+#password_list button {
+    width: fit-content;
+    padding: 7px 14px;
+    font-size: 13px;
+    margin: 5px 5px 5px 0;
+}
+
+/* deixar a "pagina" do gerador de senhas maior/ aumentei a largura do quadrado, e o espaçamento interno e o tamanho dos botoes etals */
+#generator_screen {
+    width: 650px;
+    max-width: 90%;
+    box-sizing: border-box;
+    padding: 35px;
+    margin: 40px auto;
+    gap: 25px;
+}
+
+
+#generator_screen form {
+    gap: 22px;
+}
+
+
+#generator_screen #password_length {
+    padding: 12px;
+    font-size: 16px;
+}
+
+/* Botão */
+#generator_screen .generate_btn,
+#generator_screen #btn_back_vault {
+    padding: 13px;
+    font-size: 16px;
+    cursor: pointer;
 }
