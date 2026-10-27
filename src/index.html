@@ -11,7 +11,115 @@
 </head>
 
 <body>
-    <header>
+        <header>
+        <h1>COFRE DE SENHAS</h1>
+    </header>
+
+    <main id="login_screen">
+        <h2>Entrar</h2>
+
+        <form id="login_form">
+            <div>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div>
+                <label for="master_password">Senha mestra:</label>
+                <input type="password" id="master_password" name="master_password" required>
+            </div>
+
+            <button type="submit">Entrar</button>
+        </form>
+
+        <p>Não tem uma conta? <a href="#" id="show_register">Cadastre-se</a></p>
+    </main>
+
+<main id="register_screen" hidden>
+    <h2>Criar conta</h2>
+
+    <form id="register_form">
+        <div>
+            <label for="register_name">Nome:</label>
+            <input type="text" id="register_name" name="name" required>
+        </div>
+
+        <div>
+            <label for="register_email">Email:</label>
+            <input type="email" id="register_email" name="email" required>
+        </div>
+
+        <div>
+            <!-- minlength="8"= tamanho mínima de caracteres-->
+            <label for="register_password">Senha mestra:</label>
+           <input type="password" id="register_password" name="master_password" minlength="8" required>
+        </div>
+
+        <div>
+            <label for="confirm_password">Confirmar senha mestra:</label>
+           <input type="password" id="confirm_password" name="confirm_password" minlength="8" required>
+        </div>
+
+        <button type="submit">Cadastrar</button>
+    </form>
+
+    <p>Já tem uma conta? <a href="#" id="show_login">Entrar</a></p>
+</main>
+
+<!-- tela qnd aperta adicionar senha -->
+
+<main id="add_password_screen" hidden>
+    <h2>Adicionar senha</h2>
+
+    <form id="add_password_form">
+        <div>
+            <label for="service_name">Nome do serviço:</label>
+            <input type="text" id="service_name" required>
+        </div>
+
+        <div>
+            <label for="service_description">Descrição:</label>
+            <input type="text" id="service_description">
+        </div>
+
+        <div>
+            <label for="saved_password">Senha:</label>
+            <input type="password" id="saved_password" required>
+        </div>
+
+        <button type="submit">Salvar senha</button>
+        <button type="button" id="btn_cancel_password">Cancelar</button>
+    </form>
+</main>
+    <!-- tela principal/  -->
+
+<main id="vault_screen" hidden>
+    <h2>Minhas senhas</h2>
+
+    <div class="search_container">
+        <input
+            type="search"
+            id="search_password"
+            placeholder="Pesquisar por serviço..."
+        >
+    </div>
+
+    <button type="button" id="btn_add_password">
+        + Adicionar senha
+    </button>
+
+    <section id="password_list">
+        <p id="empty_vault">
+            Você ainda não possui senhas cadastradas.
+        </p>
+    </section>
+
+    <button type="button" id="btn_logout">
+        Sair da conta
+    </button>
+</main>
+
+    <header hidden>
         <h1>GERADOR DE SENHAS</h1>
 
         <button type="button" id="btn_theme">
@@ -19,7 +127,7 @@
         </button>
     </header>
 
-    <main>
+    <main hidden>
         <div class="password_container">
             <span class="password_return"></span>
 

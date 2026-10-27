@@ -1,10 +1,13 @@
+[hidden] {
+    display: none !important;
+}
 :root {
     /* COLOR */
-    --color_background: #e9e9e9;
-    --color_text: #000;
-    --color_itens: #000;
-    --color_bg_hl: #e9e9e9;
-    --color_bg_select: #141414;
+    --color_background: #eef2f7;
+    --color_text: #172033;
+    --color_itens: #233b5d;
+    --color_bg_hl: #ffffff;
+    --color_bg_select: #233b5d;
 
     /* FONT */
     --font_text: Arial, Helvetica, sans-serif;
@@ -137,4 +140,128 @@ form {
 }
 #btn_quick_password {
     margin-top: 10px;
+}
+
+/*  login */
+
+#login_screen {
+    width: 440px;
+    max-width: 90%;
+    min-height: 350px;
+    margin: 55px auto;
+    padding: 35px;
+    gap: 25px;
+}
+
+#login_screen h2 {
+    text-align: center;
+    font-size: 26px;
+    margin-bottom: 8px;
+}
+
+#login_form {
+    gap: 18px;
+}
+
+#login_form > div {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+#login_form input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #b8c4d3;
+    border-radius: 8px;
+    background-color: white;
+    font-size: 15px;
+}
+
+#login_form button {
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background-color: #233b5d;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#login_screen p {
+    text-align: center;
+}
+
+/* ajuste tamanho da tela */
+
+#login_screen,
+#register_screen,
+#vault_screen {
+    width: 650px;
+    max-width: 90%;
+    box-sizing: border-box;
+    padding: 35px;
+    margin: 40px auto;
+    gap: 25px;
+}
+
+#vault_screen h2 {
+    font-size: 28px;
+}
+
+#vault_screen input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px;
+    font-size: 16px;
+}
+
+#vault_screen button {
+    padding: 13px;
+    font-size: 16px;
+    cursor: pointer;
+}
+/* TELA DE ADICIONAR SENHA */
+
+#add_password_screen {
+    width: 650px;
+    max-width: 90%;
+    box-sizing: border-box;
+    padding: 35px;
+    margin: 40px auto;
+    gap: 25px;
+}
+
+#add_password_screen h2 {
+    font-size: 28px;
+    text-align: center;
+}
+
+#add_password_form {
+    gap: 20px;
+}
+
+#add_password_form > div {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+#add_password_form input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px;
+    font-size: 16px;
+}
+
+#add_password_form button {
+    padding: 13px;
+    font-size: 16px;
+    cursor: pointer;
+}
+/* mais baixo o titulo*/
+
+body > header {
+    padding-top: 20px;
+    margin-top: 15px;
 }
