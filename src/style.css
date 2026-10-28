@@ -142,3 +142,226 @@ form {
 #btn_quick_password {
     margin-top: 10px;
 }
+[hidden] {
+    display: none !important;
+}
+
+/* Tela de login */
+#login_screen {
+    width: 650px;
+    max-width: 90%;
+    box-sizing: border-box;
+    padding: 35px;
+    margin: 40px auto;
+    gap: 25px;
+}
+
+#login_screen h2 {
+    text-align: center;
+    font-size: 26px;
+    margin-bottom: 8px;
+}
+
+#login_form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+#login_form > div {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+#login_form input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #b8c4d3;
+    border-radius: 8px;
+    background-color: white;
+    font-size: 15px;
+}
+
+#login_form button {
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background-color: #233b5d;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#login_screen p {
+    text-align: center;
+}
+
+
+/* Tela de cadastro */
+
+/* Tela de cadastro */
+#register_screen {
+    width: 650px;
+    max-width: 90%;
+    box-sizing: border-box;
+    padding: 35px;
+    margin: 40px auto;
+    gap: 25px;
+}
+
+#register_screen h2 {
+    text-align: center;
+    font-size: 26px;
+    margin-bottom: 8px;
+}
+
+#register_form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+#register_form > div {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+#register_form input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #b8c4d3;
+    border-radius: 8px;
+    background-color: white;
+    font-size: 15px;
+}
+
+#register_form button {
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background-color: #233b5d;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#register_screen p {
+    text-align: center;
+}
+
+/* Tela do cofre */
+#vault_screen {
+    width: 650px;
+    max-width: 90%;
+    box-sizing: border-box;
+    padding: 35px;
+    margin: 40px auto;
+    gap: 25px;
+}
+
+#vault_screen h2 {
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+#vault_screen .search_container {
+    width: 100%;
+}
+
+#vault_screen input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px;
+    font-size: 16px;
+    border: 1px solid #b8c4d3;
+    border-radius: 8px;
+}
+
+#password_list {
+    width: 100%;
+    min-height: 150px;
+    padding: 20px;
+    box-sizing: border-box;
+    border: 2px solid var(--color_itens);
+    border-radius: 10px;
+    background-color: var(--color_bg_hl);
+}
+
+#empty_vault {
+    text-align: center;
+    padding: 35px 10px;
+}
+
+#vault_screen button {
+    width: 100%;
+    padding: 13px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* Tela do gerador */
+#generator_screen {
+    width: 650px;
+    max-width: 90%;
+    box-sizing: border-box;
+    padding: 35px;
+    margin: 40px auto;
+    gap: 25px;
+}
+
+#generator_screen .password_container {
+    width: 100%;
+    display: flex;
+}
+
+#generator_screen .password_return {
+    flex: 1;
+    width: auto;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    font-size: 16px;
+}
+
+#generator_screen .btn_copy_password {
+    height: 45px;
+    padding: 5px 12px;
+}
+
+#generator_screen form {
+    gap: 22px;
+}
+
+#generator_screen #password_length {
+    padding: 12px;
+    font-size: 16px;
+}
+
+#generator_screen .generate_btn,
+#generator_screen #btn_quick_password,
+#generator_screen #btn_back_vault {
+    padding: 13px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/*deixar "tamanho da senha" e "opções de senha" maior */
+#generator_screen .field_length label {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+#generator_screen .field_options legend {
+    font-size: 21px;
+    font-weight: 600;
+}
+
+#generator_screen .option label {
+    font-size: 16px;
+}
+

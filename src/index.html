@@ -4,14 +4,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador de Senhas</title>
+    <title>Cofre de Senhas</title>
 
     <link rel="stylesheet" href="style.css">
-    <script type="module" src="./js/main.js" defer></script>
+    <script type="module" src="./app/main.js" defer></script>
+    <script type="module" src="./app/navigation.js" defer></script>
 </head>
 
 <body>
-    <header>
+
+    <!-- Cabeçalho principal -->
+    <header id="app_header">
+        <h1>COFRE DE SENHAS</h1>
+    </header>
+
+    <!-- Tela de login -->
+    <main id="login_screen">
+        <h2>Entrar</h2>
+
+        <form id="login_form">
+            <div>
+                <label for="email">Email:</label>
+                <input type="email" id="email" required>
+            </div>
+
+            <div>
+                <label for="master_password">Senha mestra:</label>
+                <input type="password" id="master_password" required>
+            </div>
+
+            <button type="submit">Entrar</button>
+        </form>
+
+        <p>Não tem uma conta? <a href="#" id="show_register">Cadastre-se</a></p>
+    </main>
+
+    <!-- Tela de cadastro -->
+    <main id="register_screen" hidden>
+        <h2>Criar conta</h2>
+
+        <form id="register_form">
+            <div>
+                <label for="register_name">Nome:</label>
+                <input type="text" id="register_name" required>
+            </div>
+
+            <div>
+                <label for="register_email">Email:</label>
+                <input type="email" id="register_email" required>
+            </div>
+
+            <div>
+                <label for="register_password">Senha mestra:</label>
+                <input type="password" id="register_password" minlength="8" required>
+            </div>
+
+            <div>
+                <label for="confirm_password">Confirmar senha mestra:</label>
+                <input type="password" id="confirm_password" minlength="8" required>
+            </div>
+
+            <button type="submit">Cadastrar</button>
+        </form>
+
+        <p>Já tem uma conta? <a href="#" id="show_login">Entrar</a></p>
+    </main>
+
+    <!-- Tela do cofre -->
+    <main id="vault_screen" hidden>
+        <h2>Minhas senhas</h2>
+
+        <div class="search_container">
+            <input type="search" id="search_password"
+                placeholder="Pesquisar por serviço...">
+        </div>
+
+        <section id="password_list">
+            <p id="empty_vault">
+                Você ainda não possui senhas cadastradas.
+            </p>
+        </section>
+
+        <button type="button" id="btn_open_generator">
+            Gerar senha
+        </button>
+
+        <button type="button" id="btn_logout">
+            Sair da conta
+        </button>
+    </main>
+
+    <!-- Cabeçalho do gerador -->
+    <header id="generator_header" hidden>
         <h1>GERADOR DE SENHAS</h1>
 
         <button type="button" id="btn_theme">
@@ -19,7 +103,9 @@
         </button>
     </header>
 
-    <main>
+    <!-- Tela do gerador -->
+    <main id="generator_screen" hidden>
+
         <div class="password_container">
             <span class="password_return"></span>
 
@@ -33,7 +119,6 @@
         <form id="password_form">
             <div class="field_length">
                 <label for="password_length">Tamanho da senha:</label>
-
                 <input type="number" name="password_length" id="password_length" min="1" max="50" required>
             </div>
 
@@ -43,32 +128,24 @@
                 <div class="options_container">
                     <div class="option">
                         <input class="password_checkbox" type="checkbox" name="uppercase" id="password_uppercase">
-                        <label for="password_uppercase">
-                            Letras maiúsculas
-                        </label>
+                        <label for="password_uppercase">Letras maiúsculas</label>
                     </div>
 
                     <div class="option">
                         <input class="password_checkbox" type="checkbox" name="lowercase" id="password_lowercase">
-                        <label for="password_lowercase">
-                            Letras minúsculas
-                        </label>
+                        <label for="password_lowercase">Letras minúsculas</label>
                     </div>
                 </div>
 
                 <div class="options_container">
                     <div class="option">
                         <input class="password_checkbox" type="checkbox" name="numeric" id="password_numeric">
-                        <label for="password_numeric">
-                            Números
-                        </label>
+                        <label for="password_numeric">Números</label>
                     </div>
 
                     <div class="option">
                         <input class="password_checkbox" type="checkbox" name="special" id="password_special">
-                        <label for="password_special">
-                            Caracteres especiais
-                        </label>
+                        <label for="password_special">Caracteres especiais</label>
                     </div>
                 </div>
             </fieldset>
@@ -77,10 +154,12 @@
                 Gerar senha
             </button>
         </form>
+
         <button type="button" class="generate_btn" id="btn_quick_password">
             Senha rápida
         </button>
-    </main>
-</body>
 
+    </main>
+
+</body>
 </html>
