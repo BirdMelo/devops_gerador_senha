@@ -10,6 +10,6 @@ const app = express();
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/senhas", vaultRoutes);
-app.use(express.static(path.join(__dirname, "../../src"))); // serve o front
+app.use(express.static(path.join(__dirname, "../src"))); // serve o front
 
 export default app;
