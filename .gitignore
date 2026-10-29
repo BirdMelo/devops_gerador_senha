@@ -7,3 +7,18 @@ Thumbs.db
 
 # Modulos do Node
 node_modules
+
+# Variáveis de ambiente
+.env
+.env.*
+!.env.example
+
+# Dados persistidos localmente pelo backend
+backend/.data/
+
+# Cobertura de testes (gerada pelo Jest)
+coverage/
+
+# Logs
+*.log
+npm-debug.log*
