@@ -13,12 +13,17 @@ Projeto sendo desenvolvido na disciplina de DevOps para compreendimento de teste
 ```
 .
 ├── .github/
-│   └── workflow/
+│   └── workflows/
 │       └── ci.yml
 ├── src/
 │   ├── app
 │   ├── index.html
 │   └── style.css
+├── backend/
+│   ├── app.js
+│   ├── server.js
+│   ├── routes
+│   └── store
 ├── .gitignore
 └── README.md
 ```
@@ -33,7 +38,8 @@ O projeto é composto por três frentes principais:
   - Gerar senhas aleatórias rápidas (sem personalização);
   - Gerar senhas personalizadas com base nas opções escolhidas pelo usuário (tamanho, uso de caracteres alfanuméricos ou apenas numéricos);
   - Controlar a alternância entre modo claro e modo escuro.
-- **`.github/workflow/ci.yml`** — Pipeline de Integração Contínua (CI), responsável por executar os testes automatizados a cada push/pull request, garantindo que novas alterações não quebrem o funcionamento da aplicação.
+- **`.github/workflows/ci.yml`** — Pipeline de Integração Contínua (CI), responsável por executar os testes automatizados a cada push/pull request, garantindo que novas alterações não quebrem o funcionamento da aplicação.
+- **`backend/`** — API Express responsável por autenticação, sessões e cofre criptografado.
 
 ## Como Executar o Projeto Localmente
 
@@ -60,23 +66,30 @@ O projeto é composto por três frentes principais:
    npm install
    ```
 
-4. Abra o arquivo `src/index.html` no navegador para utilizar a aplicação:
+4. Configure a chave de criptografia na raiz do projeto:
    ```bash
-   # Linux
-   xdg-open src/index.html
+   # Windows (cmd)
+   copy .env.example .env
 
-   # Windows
-   start src/index.html
-
-   # macOS
-   open src/index.html
+   # Gere uma chave com 64 caracteres hexadecimais e coloque-a em CHAVE_CRIPTOGRAFIA.
+   node --input-type=module -e "import {randomBytes} from 'node:crypto'; console.log(randomBytes(32).toString('hex'))"
    ```
 
-5. Pronto! A aplicação estará disponível diretamente no navegador.
+5. Inicie o servidor:
+   ```bash
+   npm start
+   ```
+
+6. Abra `http://localhost:3000` no navegador. Não abra `src/index.html` diretamente, pois o frontend utiliza a API do backend.
+7. Pronto! A aplicação estará disponível no navegador.
 
 ## Testes Automatizados
 
-Os testes são executados automaticamente pelo workflow definido em `.github/workflow/ci.yml` a cada alteração enviada ao repositório, garantindo o funcionamento contínuo da aplicação.
+Os testes são executados automaticamente pelo workflow definido em `.github/workflows/ci.yml` a cada alteração enviada ao repositório, garantindo o funcionamento contínuo da aplicação.
+
+Os usuários e as senhas do cofre são persistidos localmente em `backend/.data/store.json`,
+que é ignorado pelo Git. As sessões são mantidas somente em memória e expiram após oito horas;
+isso evita persistir tokens de autenticação e exige novo login após reiniciar o servidor.
 
 
 ## Estratégia de Ramificação

@@ -1,4 +1,5 @@
 import { api, setToken } from "./api.js";
+import { invalidPasswordMessage } from "./constants.js";
 import { showScreen, screens, openGenerator } from "./navigation.js";
 
 const list = document.getElementById("password_list");
@@ -176,7 +177,7 @@ document.getElementById("btn_entry_generate").addEventListener("click", () => {
 
 document.getElementById("btn_use_password").addEventListener("click", () => {
     const generated = document.querySelector(".password_return").textContent;
-    if (!generated) return;
+    if (!generated || generated === invalidPasswordMessage) return;
     entryPassword.value = generated;
     showScreen(screens.entry);
 });

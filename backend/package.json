@@ -1,0 +1,5 @@
+{
+  "name": "gerador-de-senhas-backend",
+  "private": true,
+  "type": "module"
+}

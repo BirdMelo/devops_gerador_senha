@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { randomUUID } from "node:crypto";
-import { senhas } from "../store/memoryStore.js";
+import { persistirDados, senhas } from "../store/memoryStore.js";
 import { exigirSessao } from "../middleware/sessao.js";
 import { criptografar, descriptografar } from "../crypto/cripto.js";
 
@@ -22,9 +22,20 @@ function paraResposta(item) {
   };
 }
 
+function dadosValidos({ servico, descricao, senha }) {
+  return (
+    typeof servico === "string" &&
+    servico.trim().length > 0 &&
+    typeof descricao === "string" &&
+    typeof senha === "string" &&
+    senha.length > 0
+  );
+}
+
 // Listar, com busca opcional
 router.get("/", (req, res) => {
-  const busca = (req.query.busca || "").toLowerCase();
+  const busca =
+    typeof req.query.busca === "string" ? req.query.busca.toLowerCase() : "";
   const lista = listaDoUsuario(req.userId)
     .filter(
       (s) =>
@@ -37,17 +48,18 @@ router.get("/", (req, res) => {
 
 // Cadastrar
 router.post("/", (req, res) => {
-  const { servico, descricao = "", senha } = req.body;
-  if (!servico || !senha) {
+  const { servico, descricao = "", senha } = req.body ?? {};
+  if (!dadosValidos({ servico, descricao, senha })) {
     return res.status(400).json({ erro: "Serviço e senha são obrigatórios." });
   }
   const nova = {
     id: randomUUID(),
-    servico,
-    descricao,
+    servico: servico.trim(),
+    descricao: descricao.trim(),
     senhaCriptografada: criptografar(senha),
   };
   listaDoUsuario(req.userId).push(nova);
+  persistirDados();
   res.status(201).json(paraResposta(nova));
 });
 
@@ -56,11 +68,16 @@ router.put("/:id", (req, res) => {
   const item = listaDoUsuario(req.userId).find((s) => s.id === req.params.id);
   if (!item) return res.status(404).json({ erro: "Senha não encontrada." });
 
-  const { servico, descricao = "", senha } = req.body;
-  if (!servico || !senha) {
+  const { servico, descricao = "", senha } = req.body ?? {};
+  if (!dadosValidos({ servico, descricao, senha })) {
     return res.status(400).json({ erro: "Serviço e senha são obrigatórios." });
   }
-  Object.assign(item, { servico, descricao, senhaCriptografada: criptografar(senha) });
+  Object.assign(item, {
+    servico: servico.trim(),
+    descricao: descricao.trim(),
+    senhaCriptografada: criptografar(senha),
+  });
+  persistirDados();
   res.json(paraResposta(item));
 });
 
@@ -70,6 +87,7 @@ router.delete("/:id", (req, res) => {
   const i = lista.findIndex((s) => s.id === req.params.id);
   if (i === -1) return res.status(404).json({ erro: "Senha não encontrada." });
   lista.splice(i, 1);
+  persistirDados();
   res.status(204).end();
 });
 

@@ -13,6 +13,9 @@ node_modules
 .env.*
 !.env.example
 
+# Dados persistidos localmente pelo backend
+backend/.data/
+
 # Cobertura de testes (gerada pelo Jest)
 coverage/
 

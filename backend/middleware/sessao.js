@@ -1,15 +1,18 @@
 import { sessions } from "../store/memoryStore.js";
 
 export function exigirSessao(req, res, next) {
-  const token = req.headers.authorization?.replace("Bearer ", "");
-  const userId = sessions.get(token); 
+  const authorization = req.headers.authorization;
+  const token = authorization?.startsWith("Bearer ")
+    ? authorization.slice("Bearer ".length)
+    : null;
+  const session = token && sessions.get(token);
 
-  // Se o token for inválido, retorna erro.
-  if (!userId) {
+  if (!session || session.expiresAt <= Date.now()) {
+    if (token) sessions.delete(token);
     return res.status(401).json({ erro: "Sessão inválida." });
   }
 
-  req.userId = userId;
+  req.userId = session.userId;
   req.token = token;
-  next(); // deixa a requisição seguir para a rota
+  next();
 }
