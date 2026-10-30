@@ -1,18 +1,26 @@
-import { sessions } from "../store/memoryStore.js";
+import { GerenciadorSessao, Usuario } from "../models.js";
 
-export function exigirSessao(req, res, next) {
+export async function exigirSessao(req, res, next) {
   const authorization = req.headers.authorization;
   const token = authorization?.startsWith("Bearer ")
     ? authorization.slice("Bearer ".length)
     : null;
-  const session = token && sessions.get(token);
+  const sessao = token && (await GerenciadorSessao.porToken(token));
 
-  if (!session || session.expiresAt <= Date.now()) {
-    if (token) sessions.delete(token);
+  if (!sessao) {
     return res.status(401).json({ erro: "Sessão inválida." });
   }
 
-  req.userId = session.userId;
+  const usuario = await Usuario.porId(sessao.usuarioId);
+  if (!usuario) {
+    await sessao.encerrarSessao();
+    return res.status(401).json({ erro: "Sessão inválida." });
+  }
+
+  usuario.chaveCofre = true;
+  req.usuario = usuario;
+  req.userId = usuario.id;
   req.token = token;
+  req.sessao = sessao;
   next();
 }

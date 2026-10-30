@@ -1,12 +1,5 @@
 import { Router } from "express";
-import bcrypt from "bcryptjs";
-import { randomUUID } from "node:crypto";
-import {
-  SESSION_DURATION_MS,
-  persistirDados,
-  sessions,
-  users,
-} from "../store/memoryStore.js";
+import { Usuario } from "../models.js";
 import { exigirSessao } from "../middleware/sessao.js";
 
 const router = Router();
@@ -25,18 +18,15 @@ router.post("/register", async (req, res) => {
   ) {
     return res.status(400).json({ erro: "Dados inválidos." });
   }
-  if (users.has(email)) {
+  if (await Usuario.porEmail(email)) {
     return res.status(409).json({ erro: "E-mail já cadastrado." }); // FE01
   }
 
-  const senhaMestraHash = await bcrypt.hash(senhaMestra, 10);
-  users.set(email, {
-    id: randomUUID(),
+  const usuario = new Usuario({
     nome: nome.trim(),
     email,
-    senhaMestraHash,
   });
-  persistirDados();
+  await usuario.cadastrar(senhaMestra);
   res.status(201).json({ mensagem: "Conta criada." });
 });
 
@@ -45,26 +35,21 @@ router.post("/login", async (req, res) => {
   const { senhaMestra, email: rawEmail } = req.body ?? {};
   const email = typeof rawEmail === "string" ? rawEmail.trim().toLowerCase() : "";
 
-  const user = users.get(email);
-  const ok =
-    user &&
-    typeof senhaMestra === "string" &&
-    (await bcrypt.compare(senhaMestra, user.senhaMestraHash));
-  if (!ok) {
+  if (typeof senhaMestra !== "string") {
     return res.status(401).json({ erro: "Credenciais inválidas." }); // FE02
   }
 
-  const token = randomUUID();
-  sessions.set(token, {
-    userId: user.id,
-    expiresAt: Date.now() + SESSION_DURATION_MS,
-  });
-  res.json({ token, nome: user.nome });
+  const usuario = new Usuario();
+  if (!(await usuario.autenticar(email, senhaMestra))) {
+    return res.status(401).json({ erro: "Credenciais inválidas." }); // FE02
+  }
+
+  res.json({ token: usuario.sessao.tokenSessao, nome: usuario.nome });
 });
 
 // UC012: encerrar sessão
-router.post("/logout", exigirSessao, (req, res) => {
-  sessions.delete(req.token); // invalida o token
+router.post("/logout", exigirSessao, async (req, res) => {
+  await req.sessao.encerrarSessao();
   res.status(204).end();
 });
 

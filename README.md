@@ -66,30 +66,40 @@ O projeto é composto por três frentes principais:
    npm install
    ```
 
-4. Configure a chave de criptografia na raiz do projeto:
+   Ou execute o setup completo, que instala as dependências, cria o `.env` e
+   preenche automaticamente uma chave aleatória para `CHAVE_CRIPTOGRAFIA`:
    ```bash
-   # Windows (cmd)
-   copy .env.example .env
-
-   # Gere uma chave com 64 caracteres hexadecimais e coloque-a em CHAVE_CRIPTOGRAFIA.
-   node --input-type=module -e "import {randomBytes} from 'node:crypto'; console.log(randomBytes(32).toString('hex'))"
+   npm run setup
    ```
 
-5. Inicie o servidor:
+4. Configure `DATABASE_URL` no `.env` criado:
+   ```bash
+   # Cole aqui a connection string PostgreSQL do Supabase.
+   DATABASE_URL=sua_connection_string_do_supabase
+   ```
+
+5. No arquivo `.env`, preencha `DATABASE_URL` com a connection string PostgreSQL
+   do Supabase. Execute o conteúdo de `schema.sql` no Supabase antes de iniciar
+   o backend.
+
+   A variável precisa conter a URL completa, começando com `postgres://` ou
+   `postgresql://`. Não use apenas o host, projeto ou uma senha isolada.
+
+6. Inicie o servidor:
    ```bash
    npm start
    ```
 
-6. Abra `http://localhost:3000` no navegador. Não abra `src/index.html` diretamente, pois o frontend utiliza a API do backend.
-7. Pronto! A aplicação estará disponível no navegador.
+7. Abra `http://localhost:3000` no navegador. Não abra `src/index.html` diretamente, pois o frontend utiliza a API do backend.
+8. Pronto! A aplicação estará disponível no navegador.
 
 ## Testes Automatizados
 
 Os testes são executados automaticamente pelo workflow definido em `.github/workflows/ci.yml` a cada alteração enviada ao repositório, garantindo o funcionamento contínuo da aplicação.
 
-Os usuários e as senhas do cofre são persistidos localmente em `backend/.data/store.json`,
-que é ignorado pelo Git. As sessões são mantidas somente em memória e expiram após oito horas;
-isso evita persistir tokens de autenticação e exige novo login após reiniciar o servidor.
+Usuários, senhas do cofre e sessões são persistidos no PostgreSQL do Supabase.
+Os tokens são armazenados apenas como hash e as sessões expiram após oito horas
+de inatividade.
 
 
 ## Estratégia de Ramificação
