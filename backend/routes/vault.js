@@ -1,16 +1,32 @@
 import { Router } from "express";
-import { randomUUID } from "node:crypto";
-import { persistirDados, senhas } from "../store/memoryStore.js";
+import { AuditorCofre, GeradorSenha, Senha } from "../models.js";
 import { exigirSessao } from "../middleware/sessao.js";
-import { criptografar, descriptografar } from "../crypto/cripto.js";
 
 const router = Router();
 router.use(exigirSessao);
 
-function listaDoUsuario(userId) {
-  if (!senhas.has(userId)) senhas.set(userId, []);
-  return senhas.get(userId);
-}
+router.post("/gerar", (req, res) => {
+  const { tamanho, especiais, numeros } = req.body ?? {};
+  const gerador = new GeradorSenha();
+  const senha = gerador.gerarSenha(
+    tamanho,
+    especiais ?? true,
+    numeros ?? true,
+  );
+  res.json({ senha });
+});
+
+router.get("/auditoria", async (req, res) => {
+  const senhas = await req.usuario.listarSenhas();
+  const relatorio = await new AuditorCofre().auditarCofre(senhas);
+  res.json({
+    totalSenhasAnalisadas: relatorio.totalSenhasAnalisadas,
+    qtdSenhasFracas: relatorio.qtdSenhasFracas,
+    qtdSenhasReutilizadas: relatorio.qtdSenhasReutilizadas,
+    pontuacaoGeral: relatorio.pontuacaoGeral,
+    resumo: relatorio.gerarResumo(),
+  });
+});
 
 // O que o front recebe: a senha volta descriptografada
 function paraResposta(item) {
@@ -18,7 +34,7 @@ function paraResposta(item) {
     id: item.id,
     servico: item.servico,
     descricao: item.descricao,
-    senha: descriptografar(item.senhaCriptografada),
+    senha: item.revelarSenha(),
   };
 }
 
@@ -33,10 +49,10 @@ function dadosValidos({ servico, descricao, senha }) {
 }
 
 // Listar, com busca opcional
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
   const busca =
     typeof req.query.busca === "string" ? req.query.busca.toLowerCase() : "";
-  const lista = listaDoUsuario(req.userId)
+  const lista = (await req.usuario.listarSenhas())
     .filter(
       (s) =>
         s.servico.toLowerCase().includes(busca) ||
@@ -47,47 +63,34 @@ router.get("/", (req, res) => {
 });
 
 // Cadastrar
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
   const { servico, descricao = "", senha } = req.body ?? {};
   if (!dadosValidos({ servico, descricao, senha })) {
     return res.status(400).json({ erro: "Serviço e senha são obrigatórios." });
   }
-  const nova = {
-    id: randomUUID(),
-    servico: servico.trim(),
-    descricao: descricao.trim(),
-    senhaCriptografada: criptografar(senha),
-  };
-  listaDoUsuario(req.userId).push(nova);
-  persistirDados();
+  const nova = Senha.criar(req.usuario, servico.trim(), senha, descricao.trim());
+  await nova.salvar();
   res.status(201).json(paraResposta(nova));
 });
 
 // Editar
-router.put("/:id", (req, res) => {
-  const item = listaDoUsuario(req.userId).find((s) => s.id === req.params.id);
+router.put("/:id", async (req, res) => {
+  const item = (await req.usuario.listarSenhas()).find((s) => s.id === req.params.id);
   if (!item) return res.status(404).json({ erro: "Senha não encontrada." });
 
   const { servico, descricao = "", senha } = req.body ?? {};
   if (!dadosValidos({ servico, descricao, senha })) {
     return res.status(400).json({ erro: "Serviço e senha são obrigatórios." });
   }
-  Object.assign(item, {
-    servico: servico.trim(),
-    descricao: descricao.trim(),
-    senhaCriptografada: criptografar(senha),
-  });
-  persistirDados();
+  await item.editar(servico.trim(), senha, descricao.trim());
   res.json(paraResposta(item));
 });
 
 // Excluir
-router.delete("/:id", (req, res) => {
-  const lista = listaDoUsuario(req.userId);
-  const i = lista.findIndex((s) => s.id === req.params.id);
-  if (i === -1) return res.status(404).json({ erro: "Senha não encontrada." });
-  lista.splice(i, 1);
-  persistirDados();
+router.delete("/:id", async (req, res) => {
+  const item = (await req.usuario.listarSenhas()).find((s) => s.id === req.params.id);
+  if (!item) return res.status(404).json({ erro: "Senha não encontrada." });
+  await item.excluir();
   res.status(204).end();
 });
 

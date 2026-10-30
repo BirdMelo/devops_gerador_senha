@@ -26,8 +26,6 @@
  * ---------------------------------------------------------------------------
  */
 
-'use strict';
-
 import bcrypt from 'bcryptjs';
 import { createHash, randomBytes, randomInt, randomUUID } from 'node:crypto';
 import { spawn } from 'node:child_process';
@@ -38,36 +36,27 @@ import { criptografar, descriptografar } from './crypto/cripto.js';
 // ===========================================================================
 
 /**
- * Script SQL (MySQL) para criar as tabelas usadas pelos modelos.
- * Para PostgreSQL, troque DATETIME por TIMESTAMP e CHAR(36) por UUID, se quiser.
- * Execute com `await Banco.criarTabelas()`.
+ * Cria um adaptador para o driver PostgreSQL.
+ *
+ * O adaptador converte os placeholders "?" usados pelas queries dos modelos
+ * para o formato "$n" exigido pelo pacote pg.
+ *
+ * @param {import('pg').Pool} pool
+ * @returns {{ executar: (sql: string, params?: any[]) => Promise<{ linhas: object[], afetadas: number }> }}
  */
-const SCHEMA_SQL = [
-  `CREATE TABLE IF NOT EXISTS usuarios (
-     id                CHAR(36)     PRIMARY KEY,
-     nome              VARCHAR(120) NOT NULL,
-     email             VARCHAR(255) NOT NULL UNIQUE,
-     senha_mestra_hash VARCHAR(255) NOT NULL,
-     data_criacao      DATETIME     NOT NULL
-   )`,
-  `CREATE TABLE IF NOT EXISTS senhas (
-     id                  CHAR(36)     PRIMARY KEY,
-     usuario_id          CHAR(36)     NOT NULL,
-     servico             VARCHAR(120) NOT NULL,
-     senha_criptografada TEXT         NOT NULL,
-     descricao           VARCHAR(500) NULL,
-     data_criacao        DATETIME     NOT NULL,
-     data_atualizacao    DATETIME     NOT NULL,
-     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
-   )`,
-  `CREATE TABLE IF NOT EXISTS sessoes (
-     id            CHAR(36) PRIMARY KEY,
-     usuario_id    CHAR(36) NOT NULL UNIQUE,
-     token_hash    CHAR(64) NOT NULL,
-     ultimo_acesso DATETIME NOT NULL,
-     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
-   )`,
-];
+function criarAdaptadorPostgres(pool) {
+  return {
+    async executar(sql, params = []) {
+      let indice = 0;
+      const sqlConvertido = sql.replace(/\?/g, () => `$${++indice}`);
+      const resultado = await pool.query(sqlConvertido, params);
+      return {
+        linhas: resultado.rows,
+        afetadas: resultado.rowCount,
+      };
+    },
+  };
+}
 
 /**
  * Banco
@@ -76,19 +65,13 @@ const SCHEMA_SQL = [
  * O adaptador precisa ter um método:
  *   executar(sql: string, params: any[]) => Promise<{ linhas: object[], afetadas: number }>
  *
- * Os SQLs deste arquivo usam placeholders no estilo "?" (MySQL).
+ * As queries usam "?" como placeholder interno; o adaptador PostgreSQL os
+ * converte para "$1", "$2", "$3" e assim por diante antes da execução.
  *
- * Exemplo com mysql2/promise:
- *   const mysql = require('mysql2/promise');
- *   const pool = mysql.createPool({ host, user, password, database });
- *   Banco.configurar({
- *     async executar(sql, params) {
- *       const [res] = await pool.query(sql, params);
- *       return Array.isArray(res)
- *         ? { linhas: res, afetadas: res.length }
- *         : { linhas: [], afetadas: res.affectedRows };
- *     },
- *   });
+ * Exemplo com pg:
+ *   import pg from 'pg';
+ *   const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
+ *   Banco.configurar(criarAdaptadorPostgres(pool));
  */
 class Banco {
   /** Adaptador atualmente configurado (null até chamar configurar). */
@@ -118,12 +101,6 @@ class Banco {
     return Banco.adaptador.executar(sql, params);
   }
 
-  /** Cria as tabelas do sistema caso ainda não existam. */
-  static async criarTabelas() {
-    for (const sql of SCHEMA_SQL) {
-      await Banco.executar(sql);
-    }
-  }
 }
 
 /**
@@ -273,8 +250,8 @@ class RelatorioAuditoria {
 // 5. GerenciadorSessao
 // ===========================================================================
 
-/** Tempo máximo de inatividade da sessão: 15 minutos. */
-const TEMPO_LIMITE_SESSAO_MS = 15 * 60 * 1000;
+/** Tempo máximo de inatividade da sessão: oito horas. */
+const TEMPO_LIMITE_SESSAO_MS = 8 * 60 * 60 * 1000;
 
 /**
  * GerenciadorSessao
@@ -299,6 +276,17 @@ class GerenciadorSessao {
    */
   static hashToken(token) {
     return createHash('sha256').update(token).digest('hex');
+  }
+
+  /**
+   * Recupera uma sessão pelo token recebido no cabeçalho HTTP.
+   * @param {string} token
+   * @returns {Promise<GerenciadorSessao|null>}
+   */
+  static async porToken(token) {
+    const sessao = new GerenciadorSessao();
+    sessao.tokenSessao = token;
+    return (await sessao.validarSessao()) ? sessao : null;
   }
 
   /**
@@ -406,6 +394,18 @@ class Usuario {
     return u;
   }
 
+  static async porEmail(email) {
+    const { linhas } = await Banco.executar('SELECT * FROM usuarios WHERE email = ?', [
+      String(email).trim().toLowerCase(),
+    ]);
+    return linhas.length ? Usuario.deLinha(linhas[0]) : null;
+  }
+
+  static async porId(id) {
+    const { linhas } = await Banco.executar('SELECT * FROM usuarios WHERE id = ?', [id]);
+    return linhas.length ? Usuario.deLinha(linhas[0]) : null;
+  }
+
   /**
    * Cadastra o usuário no banco.
    *
@@ -454,13 +454,10 @@ class Usuario {
    * @returns {Promise<boolean>} true se as credenciais estão corretas
    */
   async autenticar(email, senhaMestra) {
-    const { linhas } = await Banco.executar('SELECT * FROM usuarios WHERE email = ?', [
-      String(email).trim().toLowerCase(),
-    ]);
-    if (!linhas.length) return false;
-    if (!(await bcrypt.compare(senhaMestra, linhas[0].senha_mestra_hash))) return false;
+    const usuario = await Usuario.porEmail(email);
+    if (!usuario || !(await bcrypt.compare(senhaMestra, usuario.senhaMestraHash))) return false;
 
-    Object.assign(this, Usuario.deLinha(linhas[0]));
+    Object.assign(this, usuario);
     this.chaveCofre = true;
 
     this.sessao = new GerenciadorSessao();
@@ -788,7 +785,7 @@ class AuditorCofre {
 
 export {
   Banco,
-  SCHEMA_SQL,
+  criarAdaptadorPostgres,
   Usuario,
   GerenciadorSessao,
   Senha,
