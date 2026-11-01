@@ -10,6 +10,7 @@
     <script type="module" src="./app/main.js" defer></script>
     <script type="module" src="./app/navigation.js" defer></script>
     <script type="module" src="./app/auth.js" defer></script>
+    <script type="module" src="./app/account.js" defer></script>
 </head>
 
 <body>
@@ -17,7 +18,12 @@
     <!-- Cabeçalho principal -->
     <header id="app_header">
         <h1>COFRE DE SENHAS</h1>
+
+        <button type="button" class="btn_theme">
+            <img class="theme_icon" src="./img/dark_mode_icon.svg" alt="Ativar modo escuro">
+        </button>
     </header>
+
 
     <!-- Tela de login -->
     <main id="login_screen">
@@ -34,7 +40,7 @@
                 <input type="password" id="master_password" required>
             </div>
 
-            <button type="submit">Entrar</button>
+            <button class="btn_100" type="submit">Entrar</button>
         </form>
 
         <p class="form_error" id="login_error" role="alert" hidden></p>
@@ -80,8 +86,7 @@
         <h2>Minhas senhas</h2>
 
         <div class="search_container">
-            <input type="search" id="search_password"
-                placeholder="Pesquisar por serviço...">
+            <input type="search" id="search_password" placeholder="Pesquisar por serviço...">
         </div>
 
         <button type="button" id="btn_add_password">Adicionar senha</button>
@@ -92,13 +97,64 @@
             </p>
         </section>
 
-        <button type="button" id="btn_open_generator">
+        <button class="btn_100" type="button" id="btn_open_generator">
             Gerar senha
         </button>
+
+        <button type="button" id="btn_open_change_password">Alterar senha mestra</button>
+        <button type="button" id="btn_open_delete_account">Excluir conta</button>
 
         <button type="button" id="btn_logout">
             Sair da conta
         </button>
+    </main>
+
+    <!-- Tela de alterar senha mestra -->
+    <main id="change_password_screen" hidden>
+        <h2>Alterar senha mestra</h2>
+
+        <form id="change_password_form">
+            <div>
+                <label for="current_password">Senha mestra atual:</label>
+                <input type="password" id="current_password" required>
+            </div>
+
+            <div>
+                <label for="new_master_password">Nova senha mestra:</label>
+                <input type="password" id="new_master_password" minlength="8" required>
+            </div>
+
+            <div>
+                <label for="confirm_new_password">Confirmar nova senha mestra:</label>
+                <input type="password" id="confirm_new_password" minlength="8" required>
+            </div>
+
+            <p class="form_error" id="change_password_error" role="alert" hidden></p>
+
+            <button type="submit">Alterar senha</button>
+            <button type="button" id="btn_cancel_change_password">Cancelar</button>
+        </form>
+    </main>
+
+    <!-- Tela de excluir conta -->
+    <main id="delete_account_screen" hidden>
+        <h2>Excluir conta</h2>
+
+        <p class="warning">
+            Esta ação é irreversível. Sua conta e todas as senhas do cofre serão excluídas permanentemente.
+        </p>
+
+        <form id="delete_account_form">
+            <div>
+                <label for="delete_password">Confirme sua senha mestra:</label>
+                <input type="password" id="delete_password" required>
+            </div>
+
+            <p class="form_error" id="delete_account_error" role="alert" hidden></p>
+
+            <button type="submit" id="btn_confirm_delete">Excluir minha conta</button>
+            <button type="button" id="btn_cancel_delete_account">Cancelar</button>
+        </form>
     </main>
 
     <!-- Tela de adicionar/editar senha -->
@@ -120,13 +176,15 @@
                 <label for="entry_password">Senha:</label>
                 <input type="password" id="entry_password" required>
                 <button type="button" id="btn_toggle_entry_password">Mostrar</button>
-                <button type="button" id="btn_entry_generate">Gerar senha</button>
+                <button class="btn_100" type="button" id="btn_entry_generate">Gerar senha</button>
             </div>
 
             <p class="form_error" id="entry_error" role="alert" hidden></p>
 
-            <button type="submit">Salvar</button>
-            <button type="button" id="btn_entry_cancel">Cancelar</button>
+            <div class="botoes_senha_nova">
+                <button class="btn_nova_senha" type="submit">Salvar</button>
+                <button class="btn_nova_senha" type="button" id="btn_entry_cancel">Cancelar</button>    
+            </div>
         </form>
     </main>
 
@@ -134,8 +192,8 @@
     <header id="generator_header" hidden>
         <h1>GERADOR DE SENHAS</h1>
 
-        <button type="button" id="btn_theme">
-            <img id="theme_icon" src="./img/dark_mode_icon.svg" alt="Ativar modo escuro">
+        <button type="button" class="btn_theme">
+            <img class="theme_icon" src="./img/dark_mode_icon.svg" alt="Ativar modo escuro">
         </button>
     </header>
 
@@ -186,7 +244,7 @@
                 </div>
             </fieldset>
 
-            <button type="submit" class="generate_btn" id="btn_generate_password">
+            <button type="submit" class="generate_btn btn_100" id="btn_generate_password">
                 Gerar senha
             </button>
         </form>
@@ -195,8 +253,12 @@
             Senha rápida
         </button>
 
-        <button type="button" id="btn_use_password" hidden>Usar esta senha</button>
+        <button type="button" id="btn_use_password" hidden>
+            Usar esta senha
+        </button>
 
     </main>
 
 </body>
+
+</html>

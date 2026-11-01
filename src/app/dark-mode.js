@@ -1,19 +1,24 @@
-const themeButton = document.getElementById("btn_theme");
-const themeIcon = document.getElementById("theme_icon");
+const themeButtons = document.querySelectorAll(".btn_theme");
+const themeIcons = document.querySelectorAll(".theme_icon");
 const copyIcon = document.getElementById("copy_icon");
 
-themeButton.addEventListener("click", () => {
-    const html = document.documentElement;
+themeButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+        const html = document.documentElement;
+        const toDark = html.dataset.theme === "light";
 
-    if (html.dataset.theme === "light") {
-        html.dataset.theme = "dark";
+        html.dataset.theme = toDark ? "dark" : "light";
 
-        themeIcon.src = "./img/light_mode_icon.svg";
-        copyIcon.src = "./img/copy_dark_mode.svg";
-    } else {
-        html.dataset.theme = "light";
+        // Atualiza o ícone de todos os botões, para ficarem sincronizados
+        // quando a tela (e o cabeçalho) mudar
+        themeIcons.forEach((icon) => {
+            icon.src = toDark
+                ? "./img/light_mode_icon.svg"
+                : "./img/dark_mode_icon.svg";
+        });
 
-        themeIcon.src = "./img/dark_mode_icon.svg";
-        copyIcon.src = "./img/copy_light_mode.svg";
-    }
+        copyIcon.src = toDark
+            ? "./img/copy_dark_mode.svg"
+            : "./img/copy_light_mode.svg";
+    });
 });

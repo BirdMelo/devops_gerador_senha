@@ -1,3 +1,4 @@
+
 :root {
     /* COLOR */
     --color_background: #e9e9e9;
@@ -12,7 +13,7 @@
     --font_text: Arial, Helvetica, sans-serif;
 }
 
-/* DARK MODE */
+/* ---------- DARK MODE ---------- */
 [data-theme="dark"] {
     --color_background: #0d0d0f;
     --color_text: #fff;
@@ -20,6 +21,10 @@
     --color_bg_hl: #141414;
     --color_bg_select: #e9e9e9;
     --color_error: #ff6b5e;
+}
+
+.btn_theme {
+    cursor: pointer;
 }
 
 /* ---------- BASE ---------- */
@@ -38,7 +43,6 @@ body {
     background-color: var(--color_background);
     font-family: var(--font_text);
     color: var(--color_text);
-    /* Só para não deixar o título colado no topo. */
     padding-top: 3vh;
 }
 
@@ -57,7 +61,7 @@ header button {
     padding: 3.5px 5px;
 }
 
-/* ---------- LAYOUT DAS TELAS (todas são <main>) ---------- */
+/* ---------- LAYOUT DAS TELAS ---------- */
 main {
     display: flex;
     flex-direction: column;
@@ -88,34 +92,42 @@ main h2 {
     text-align: center;
 }
 
-.form_error {
-    color: var(--color_error);
-    font-size: 0.9rem;
-    margin-top: 10px;
-}
-
 /* ---------- FORMULÁRIOS ---------- */
-form {
-    margin-top: 12px;
+main form {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-}
-
-#login_form,
-#register_form {
     gap: 18px;
 }
 
-#login_form > div,
-#register_form > div {
+/* Espaçamento específico do gerador */
+#generator_screen form {
+    gap: 5px;
+}
+
+#btn_generate_password {
+    margin-top: 15px;
+}
+
+/* Organização dos campos de login, cadastro e conta */
+:is(
+    #login_form,
+    #register_form,
+    #change_password_form,
+    #delete_account_form
+) > div {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-/* Campos de texto (seguem o tema claro/escuro) */
-:is(#login_form, #register_form, #entry_form) input,
+/* Campos de texto */
+:is(
+    #login_form,
+    #register_form,
+    #entry_form,
+    #change_password_form,
+    #delete_account_form
+) input,
 #search_password {
     width: 100%;
     padding: 12px;
@@ -127,8 +139,14 @@ form {
     font-size: 16px;
 }
 
+/* Mensagens de erro */
+.form_error {
+    color: var(--color_error);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
 /* ---------- BOTÕES ---------- */
-/* Botões diretos da tela, botões dentro de formulários e botões dos itens do cofre */
 :is(main > button, main form button, .password_item button) {
     padding: 13px;
     border: 2px solid var(--color_itens);
@@ -145,7 +163,7 @@ form {
     color: var(--color_background);
 }
 
-/* Botão principal (login e cadastro) */
+/* Botões principais de login e cadastro */
 #login_form button,
 #register_form button {
     background-color: var(--color_primary);
@@ -158,6 +176,11 @@ form {
     background-color: var(--color_primary);
     color: #fff;
     filter: brightness(1.2);
+}
+
+/* Botões com largura total */
+.btn_100 {
+    width: 100%;
 }
 
 /* ---------- COFRE ---------- */
@@ -209,14 +232,14 @@ form {
     text-overflow: ellipsis;
 }
 
-/* Botões menores dentro de cada item (precisa vir depois da regra base dos botões) */
+/* Botões menores dentro de cada item */
 .password_item button {
     padding: 3px 10px;
     font-size: 0.85rem;
 }
 
 /* ---------- FORMULÁRIO DE ADICIONAR/EDITAR ---------- */
-#entry_form div {
+#entry_form > div:not(.botoes_senha_nova) {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -227,22 +250,28 @@ form {
     flex: 0 0 100%;
 }
 
-/* Precisa vir depois da regra compartilhada dos campos de texto */
 #entry_form input {
     flex: 1 1 150px;
     width: auto;
 }
 
-#entry_form div button {
-    padding: 6px 12px;
+/* Botões de mostrar senha e gerar senha */
+#entry_form > div:not(.botoes_senha_nova) > button {
     font-size: 0.9rem;
 }
 
-/* ---------- GERADOR ---------- */
-#generator_screen form {
-    gap: 22px;
+/* Agrupamento dos botões Salvar e Cancelar */
+.botoes_senha_nova {
+    display: flex;
+    width: 100%;
+    gap: 10px;
 }
 
+.btn_nova_senha {
+    flex: 1;
+}
+
+/* ---------- GERADOR ---------- */
 .password_container {
     display: flex;
     margin-bottom: 12px;
@@ -340,9 +369,32 @@ form {
 
 #btn_quick_password,
 #btn_use_password {
-    margin-top: 10px;
+    margin-top: -10px;
 }
 
 #btn_use_password {
     padding: 1rem 0.5rem;
 }
+
+/* ---------- EXCLUIR CONTA ---------- */
+.warning {
+    padding: 12px;
+    border: 2px solid var(--color_error);
+    border-radius: 8px;
+    color: var(--color_error);
+    text-align: center;
+}
+
+#btn_open_delete_account,
+#btn_confirm_delete {
+    border-color: var(--color_error);
+    color: var(--color_error);
+}
+
+#btn_open_delete_account:hover,
+#btn_confirm_delete:hover {
+    background-color: var(--color_error);
+    color: var(--color_background);
+}
+
+

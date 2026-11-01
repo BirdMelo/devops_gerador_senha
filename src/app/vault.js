@@ -79,7 +79,7 @@ export function resetVault() {
 }
 
 // Sessão inválida (ex.: servidor reiniciou): volta para o login
-function handleError(error) {
+export function handleError(error) {
     if (error.status === 401) {
         setToken(null);
         resetVault();
