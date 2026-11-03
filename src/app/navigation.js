@@ -37,14 +37,102 @@ document.getElementById("show_login").addEventListener("click", (event) => {
     showScreen(loginScreen);
 });
 
-// Entrar no cofre
-document.getElementById("login_form").addEventListener("submit", (event) => {
+// Cadastro de usuário
+document.getElementById("register_form").addEventListener("submit", async (event) => {
     event.preventDefault();
-    showScreen(vaultScreen);
+
+    const nome = document.getElementById("register_name").value;
+    const email = document.getElementById("register_email").value;
+    const senhaMestra = document.getElementById("register_password").value;
+    const confirmarSenha = document.getElementById("confirm_password").value;
+
+    if (senhaMestra !== confirmarSenha) {
+        alert("As senhas não coincidem.");
+        return;
+    }
+
+    try {
+        const resposta = await fetch("/api/auth/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                nome,
+                email,
+                senhaMestra
+            })
+        });
+
+        const dados = await resposta.json();
+
+        if (!resposta.ok) {
+            throw new Error(dados.erro || "Erro ao cadastrar.");
+        }
+
+        alert("Conta criada com sucesso!");
+        document.getElementById("register_form").reset();
+        showScreen(loginScreen);
+
+    } catch (erro) {
+        alert(erro.message);
+    }
 });
 
-// Voltar para login ao sair
-document.getElementById("btn_logout").addEventListener("click", () => {
+// Login
+document.getElementById("login_form").addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const email = document.getElementById("email").value;
+    const senhaMestra = document.getElementById("master_password").value;
+
+    try {
+        const resposta = await fetch("/api/auth/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email,
+                senhaMestra
+            })
+        });
+
+        const dados = await resposta.json();
+
+        if (!resposta.ok) {
+            throw new Error(dados.erro || "Erro ao fazer login.");
+        }
+
+        sessionStorage.setItem("token", dados.token);
+        sessionStorage.setItem("nomeUsuario", dados.nome);
+
+        showScreen(vaultScreen);
+
+    } catch (erro) {
+        alert(erro.message);
+    }
+});
+
+// Logout
+document.getElementById("btn_logout").addEventListener("click", async () => {
+    const token = sessionStorage.getItem("token");
+
+    try {
+        if (token) {
+            await fetch("/api/auth/logout", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+        }
+    } catch (erro) {
+        console.error("Erro ao encerrar sessão:", erro);
+    }
+
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("nomeUsuario");
     showScreen(loginScreen);
 });
 
@@ -58,15 +146,9 @@ const backButton = document.createElement("button");
 backButton.type = "button";
 backButton.id = "btn_back_vault";
 backButton.textContent = "Voltar ao cofre";
+
 backButton.addEventListener("click", () => {
     showScreen(vaultScreen);
 });
 
 generatorScreen.appendChild(backButton);
-
-// Cadastro: por enquanto apenas retorna ao login.
-// Nãoto implementando autenticação ou armazenamento.
-document.getElementById("register_form").addEventListener("submit", (event) => {
-    event.preventDefault();
-    showScreen(loginScreen);
-});
