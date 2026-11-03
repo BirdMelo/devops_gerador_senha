@@ -1,3 +1,4 @@
+
 const loginScreen = document.getElementById("login_screen");
 const registerScreen = document.getElementById("register_screen");
 const vaultScreen = document.getElementById("vault_screen");
@@ -30,8 +31,9 @@ export function showScreen(screen) {
     }
 }
 
-// Gerador: lembra de onde foi aberto para voltar ao lugar certo
+// Gerador: permite voltar para a tela de onde foi aberto
 const useButton = document.getElementById("btn_use_password");
+
 const backButton = document.createElement("button");
 backButton.type = "button";
 backButton.id = "btn_back_vault";
@@ -40,16 +42,24 @@ let generatorOrigin = vaultScreen;
 
 export function openGenerator(origin) {
     generatorOrigin = origin;
+
     useButton.hidden = origin !== entryScreen;
+
     backButton.textContent =
-        origin === entryScreen ? "Voltar ao formulário" : "Voltar ao cofre";
+        origin === entryScreen
+            ? "Voltar ao formulário"
+            : "Voltar ao cofre";
+
     showScreen(generatorScreen);
 }
 
-backButton.addEventListener("click", () => showScreen(generatorOrigin));
+backButton.addEventListener("click", () => {
+    showScreen(generatorOrigin);
+});
+
 generatorScreen.appendChild(backButton);
 
-// Ir para cadastro
+// Ir para cadastro de usuário
 document.getElementById("show_register").addEventListener("click", (event) => {
     event.preventDefault();
     showScreen(registerScreen);
