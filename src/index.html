@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="style.css">
     <script type="module" src="./app/main.js" defer></script>
     <script type="module" src="./app/navigation.js" defer></script>
-    <script type="module" src="./app/auth.js" defer></script>
 </head>
 
 <body>
@@ -37,7 +36,7 @@
             <button type="submit">Entrar</button>
         </form>
 
-        <p class="form_error" id="login_error" role="alert" hidden></p>
+        <p id="login_error" hidden></p>
 
         <p>Não tem uma conta? <a href="#" id="show_register">Cadastre-se</a></p>
     </main>
@@ -69,8 +68,7 @@
 
             <button type="submit">Cadastrar</button>
         </form>
-
-        <p class="form_error" id="register_error" role="alert" hidden></p>
+        <p id="register_error" hidden></p>
 
         <p>Já tem uma conta? <a href="#" id="show_login">Entrar</a></p>
     </main>
@@ -84,13 +82,15 @@
                 placeholder="Pesquisar por serviço...">
         </div>
 
-        <button type="button" id="btn_add_password">Adicionar senha</button>
-
         <section id="password_list">
             <p id="empty_vault">
                 Você ainda não possui senhas cadastradas.
             </p>
         </section>
+
+        <button type="button" id="btn_add_password">
+    Adicionar senha
+</button>
 
         <button type="button" id="btn_open_generator">
             Gerar senha
@@ -100,36 +100,36 @@
             Sair da conta
         </button>
     </main>
+<!-- Tela de cadastro e edição de senha -->
+<main id="entry_screen" hidden>
+    <h2 id="entry_title">Nova senha</h2>
 
-    <!-- Tela de adicionar/editar senha -->
-    <main id="entry_screen" hidden>
-        <h2 id="entry_title">Nova senha</h2>
+    <form id="entry_form">
+        <div>
+            <label for="entry_service">Serviço:</label>
+            <input type="text" id="entry_service" placeholder="Ex.: Instagram" required>
+        </div>
 
-        <form id="entry_form">
-            <div>
-                <label for="entry_service">Serviço:</label>
-                <input type="text" id="entry_service" required>
-            </div>
+        <div>
+            <label for="entry_description">Descrição:</label>
+            <input type="text" id="entry_description" placeholder="Ex.: Conta pessoal">
+        </div>
 
-            <div>
-                <label for="entry_description">Descrição:</label>
-                <input type="text" id="entry_description">
-            </div>
+        <div>
+            <label for="entry_password">Senha:</label>
+            <input type="password" id="entry_password" required>
+            <button type="button" id="btn_toggle_entry_password">Mostrar</button>
+        </div>
 
-            <div>
-                <label for="entry_password">Senha:</label>
-                <input type="password" id="entry_password" required>
-                <button type="button" id="btn_toggle_entry_password">Mostrar</button>
-                <button type="button" id="btn_entry_generate">Gerar senha</button>
-            </div>
+        <p id="entry_error" hidden></p>
 
-            <p class="form_error" id="entry_error" role="alert" hidden></p>
+        <button type="button" id="btn_entry_generate">Gerar senha</button>
+        <button type="submit">Salvar senha</button>
+        <button type="button" id="btn_entry_cancel">Cancelar</button>
+    </form>
 
-            <button type="submit">Salvar</button>
-            <button type="button" id="btn_entry_cancel">Cancelar</button>
-        </form>
-    </main>
 
+</main>
     <!-- Cabeçalho do gerador -->
     <header id="generator_header" hidden>
         <h1>GERADOR DE SENHAS</h1>
@@ -189,14 +189,18 @@
             <button type="submit" class="generate_btn" id="btn_generate_password">
                 Gerar senha
             </button>
+
         </form>
 
         <button type="button" class="generate_btn" id="btn_quick_password">
             Senha rápida
         </button>
 
-        <button type="button" id="btn_use_password" hidden>Usar esta senha</button>
+        <button type="button" id="btn_use_password" hidden>
+    Usar senha gerada
+</button>
 
     </main>
 
 </body>
+</html>
