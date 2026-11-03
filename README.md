@@ -13,12 +13,17 @@ Projeto sendo desenvolvido na disciplina de DevOps para compreendimento de teste
 ```
 .
 ├── .github/
-│   └── workflow/
+│   └── workflows/
 │       └── ci.yml
 ├── src/
 │   ├── app
 │   ├── index.html
 │   └── style.css
+├── backend/
+│   ├── app.js
+│   ├── server.js
+│   ├── routes
+│   └── store
 ├── .gitignore
 └── README.md
 ```
@@ -33,7 +38,8 @@ O projeto é composto por três frentes principais:
   - Gerar senhas aleatórias rápidas (sem personalização);
   - Gerar senhas personalizadas com base nas opções escolhidas pelo usuário (tamanho, uso de caracteres alfanuméricos ou apenas numéricos);
   - Controlar a alternância entre modo claro e modo escuro.
-- **`.github/workflow/ci.yml`** — Pipeline de Integração Contínua (CI), responsável por executar os testes automatizados a cada push/pull request, garantindo que novas alterações não quebrem o funcionamento da aplicação.
+- **`.github/workflows/ci.yml`** — Pipeline de Integração Contínua (CI), responsável por executar os testes automatizados a cada push/pull request, garantindo que novas alterações não quebrem o funcionamento da aplicação.
+- **`backend/`** — API Express responsável por autenticação, sessões e cofre criptografado.
 
 ## Como Executar o Projeto Localmente
 
@@ -60,23 +66,40 @@ O projeto é composto por três frentes principais:
    npm install
    ```
 
-4. Abra o arquivo `src/index.html` no navegador para utilizar a aplicação:
+   Ou execute o setup completo, que instala as dependências, cria o `.env` e
+   preenche automaticamente uma chave aleatória para `CHAVE_CRIPTOGRAFIA`:
    ```bash
-   # Linux
-   xdg-open src/index.html
-
-   # Windows
-   start src/index.html
-
-   # macOS
-   open src/index.html
+   npm run setup
    ```
 
-5. Pronto! A aplicação estará disponível diretamente no navegador.
+4. Configure `DATABASE_URL` no `.env` criado:
+   ```bash
+   # Cole aqui a connection string PostgreSQL do Supabase.
+   DATABASE_URL=sua_connection_string_do_supabase
+   ```
+
+5. No arquivo `.env`, preencha `DATABASE_URL` com a connection string PostgreSQL
+   do Supabase. Execute o conteúdo de `schema.sql` no Supabase antes de iniciar
+   o backend.
+
+   A variável precisa conter a URL completa, começando com `postgres://` ou
+   `postgresql://`. Não use apenas o host, projeto ou uma senha isolada.
+
+6. Inicie o servidor:
+   ```bash
+   npm start
+   ```
+
+7. Abra `http://localhost:3000` no navegador. Não abra `src/index.html` diretamente, pois o frontend utiliza a API do backend.
+8. Pronto! A aplicação estará disponível no navegador.
 
 ## Testes Automatizados
 
-Os testes são executados automaticamente pelo workflow definido em `.github/workflow/ci.yml` a cada alteração enviada ao repositório, garantindo o funcionamento contínuo da aplicação.
+Os testes são executados automaticamente pelo workflow definido em `.github/workflows/ci.yml` a cada alteração enviada ao repositório, garantindo o funcionamento contínuo da aplicação.
+
+Usuários, senhas do cofre e sessões são persistidos no PostgreSQL do Supabase.
+Os tokens são armazenados apenas como hash e as sessões expiram após oito horas
+de inatividade.
 
 
 ## Estratégia de Ramificação

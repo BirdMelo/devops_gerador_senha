@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="style.css">
     <script type="module" src="./app/main.js" defer></script>
     <script type="module" src="./app/navigation.js" defer></script>
+    <script type="module" src="./app/auth.js" defer></script>
 </head>
 
 <body>
@@ -35,6 +36,8 @@
 
             <button type="submit">Entrar</button>
         </form>
+
+        <p class="form_error" id="login_error" role="alert" hidden></p>
 
         <p>Não tem uma conta? <a href="#" id="show_register">Cadastre-se</a></p>
     </main>
@@ -67,6 +70,8 @@
             <button type="submit">Cadastrar</button>
         </form>
 
+        <p class="form_error" id="register_error" role="alert" hidden></p>
+
         <p>Já tem uma conta? <a href="#" id="show_login">Entrar</a></p>
     </main>
 
@@ -78,6 +83,8 @@
             <input type="search" id="search_password"
                 placeholder="Pesquisar por serviço...">
         </div>
+
+        <button type="button" id="btn_add_password">Adicionar senha</button>
 
         <section id="password_list">
             <p id="empty_vault">
@@ -92,6 +99,35 @@
         <button type="button" id="btn_logout">
             Sair da conta
         </button>
+    </main>
+
+    <!-- Tela de adicionar/editar senha -->
+    <main id="entry_screen" hidden>
+        <h2 id="entry_title">Nova senha</h2>
+
+        <form id="entry_form">
+            <div>
+                <label for="entry_service">Serviço:</label>
+                <input type="text" id="entry_service" required>
+            </div>
+
+            <div>
+                <label for="entry_description">Descrição:</label>
+                <input type="text" id="entry_description">
+            </div>
+
+            <div>
+                <label for="entry_password">Senha:</label>
+                <input type="password" id="entry_password" required>
+                <button type="button" id="btn_toggle_entry_password">Mostrar</button>
+                <button type="button" id="btn_entry_generate">Gerar senha</button>
+            </div>
+
+            <p class="form_error" id="entry_error" role="alert" hidden></p>
+
+            <button type="submit">Salvar</button>
+            <button type="button" id="btn_entry_cancel">Cancelar</button>
+        </form>
     </main>
 
     <!-- Cabeçalho do gerador -->
@@ -159,7 +195,8 @@
             Senha rápida
         </button>
 
+        <button type="button" id="btn_use_password" hidden>Usar esta senha</button>
+
     </main>
 
 </body>
-</html>

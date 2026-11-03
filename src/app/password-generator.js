@@ -1,14 +1,22 @@
-import { uppercase, lowercase, numbers, symbols } from "./constants.js";
+import {
+    invalidPasswordMessage,
+    lowercase,
+    numbers,
+    symbols,
+    uppercase,
+} from "./constants.js";
 
 export function getRandomCharacter(characters) {
-    // Usei isso porque o 'Math.random' não é criptograficamente seguro.
-    // crypto.getRandomValues foi criado pensando especificamente me segurança.
-    const array = new Uint32Array(1);
-    // Preenche esse array, que só tem 1 posição, com um inteiro aleatório. Tem que ser em um array porque
-    // é assim que o crypto.getRandomValues funciona.
-    crypto.getRandomValues(array);
+    if (!characters.length) {
+        throw new Error("O conjunto de caracteres não pode ser vazio.");
+    }
 
-    // Usa o número aleatório para pegar uma posição aleatória do array de caracteres.
+    const array = new Uint32Array(1);
+    const limit = Math.floor(2 ** 32 / characters.length) * characters.length;
+
+    do {
+        crypto.getRandomValues(array);
+    } while (array[0] >= limit);
     return characters[array[0] % characters.length];
 }
 
@@ -31,12 +39,12 @@ export function generatePassword() {
     // String final com todos os caracteres que podem ser incluídos
     let characters = "";
 
-    if (containUppercase) { characters += uppercase; }
-    if (containLowercase) { characters += lowercase; }
-    if (containNumber) { characters += numbers; }
-    if (containSymbols) { characters += symbols; }
-    if (characters.length === 0 || passwordLength <= 0) { 
-        return "Escolha ao menos um tipo de caractere."; 
+    if (containUppercase) characters += uppercase;
+    if (containLowercase) characters += lowercase;
+    if (containNumber) characters += numbers;
+    if (containSymbols) characters += symbols;
+    if (characters.length === 0 || passwordLength <= 0) {
+        return invalidPasswordMessage;
     }
 
     let password = "";

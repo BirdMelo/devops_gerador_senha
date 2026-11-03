@@ -5,10 +5,13 @@
     --color_itens: #000;
     --color_bg_hl: #e9e9e9;
     --color_bg_select: #141414;
+    --color_primary: #233b5d;
+    --color_error: #c0392b;
 
     /* FONT */
     --font_text: Arial, Helvetica, sans-serif;
 }
+
 /* DARK MODE */
 [data-theme="dark"] {
     --color_background: #0d0d0f;
@@ -16,12 +19,21 @@
     --color_itens: #fff;
     --color_bg_hl: #141414;
     --color_bg_select: #e9e9e9;
+    --color_error: #ff6b5e;
 }
+
+/* ---------- BASE ---------- */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
+
+/* Garante que o atributo hidden sempre esconda */
+[hidden] {
+    display: none !important;
+}
+
 body {
     background-color: var(--color_background);
     font-family: var(--font_text);
@@ -29,10 +41,12 @@ body {
     /* Só para não deixar o título colado no topo. */
     padding-top: 3vh;
 }
+
 header h1 {
     text-align: center;
     margin-bottom: 50px;
 }
+
 header button {
     position: absolute;
     right: 16px;
@@ -42,249 +56,119 @@ header button {
     border-radius: 100%;
     padding: 3.5px 5px;
 }
+
+/* ---------- LAYOUT DAS TELAS (todas são <main>) ---------- */
 main {
     display: flex;
     flex-direction: column;
-    width: fit-content;
-    margin: auto;
-    padding: 16px;
+    gap: 25px;
+    width: 650px;
+    max-width: 90%;
+    margin: 40px auto;
+    padding: 35px;
     border: solid 2px var(--color_itens);
     border-radius: 16px;
 }
-.password_container {
-    margin-bottom: 12px;
-    display: flex;
-}
-.password_return {
-    display: inline-block;
-    border: 2px solid var(--color_itens);
-    width: 300px;
-    height: 27px;
-    border-radius: 8px 0 0 8px;
-    background-color: var(--color_bg_hl);
-    padding-left: 6px;
 
-    /*Esconde parte da senha caso seja grande demais*/
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+/* Telas mais estreitas */
+#vault_screen,
+#entry_screen {
+    width: min(92vw, 480px);
+    gap: 10px;
 }
-.btn_copy_password {
-    height: 27px;
-    border-radius: 0 8px 8px 0;
-    border: 2px solid var(--color_itens);
-    border-left: 0px;
-    background-color: var(--color_background);
-    cursor: pointer;
+
+main h2 {
+    text-align: center;
+    font-size: 26px;
+    margin-bottom: 8px;
 }
+
+#login_screen p,
+#register_screen p {
+    text-align: center;
+}
+
+.form_error {
+    color: var(--color_error);
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+/* ---------- FORMULÁRIOS ---------- */
 form {
     margin-top: 12px;
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
-.field_length input {
-    background-color: var(--color_bg_hl);
-    border: 2px solid var(--color_itens);
-    color: var(--color_text);
-    padding: 4px 6px;
-    border-radius: 16px;
-    width: 50%;
-}
-.field_length {
-    display: flex;
-    justify-content: space-between;
-}
 
-/* Estilização das opções de personalização */
-
-.field_options {
-    border: none;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-.field_options legend {
-    margin-bottom: 6px;
-}
-.options_container {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-}
-.option {
-    flex: 1;
-}
-.option input {
-    display: none;
-}
-.option label {
-    display: block;
-    border: solid 2px var(--color_itens);
-    border-radius: 16px;
-    padding: 4px 8px;
-    cursor: pointer;
-    text-align: center;
-}
-.option input:checked + label {
-    background-color: var(--color_bg_select);
-    color: var(--color_background);
-}
-
-/* Estilização dos botões de geração */
-.generate_btn {
-    background-color: var(--color_background);
-    color: var(--color_text);
-    border-radius: 10px;
-    padding: 4px 0 4px 0;
-    cursor: pointer;
-}
-#btn_quick_password {
-    margin-top: 10px;
-}
-[hidden] {
-    display: none !important;
-}
-
-/* Tela de login */
-#login_screen {
-    width: 650px;
-    max-width: 90%;
-    box-sizing: border-box;
-    padding: 35px;
-    margin: 40px auto;
-    gap: 25px;
-}
-
-#login_screen h2 {
-    text-align: center;
-    font-size: 26px;
-    margin-bottom: 8px;
-}
-
-#login_form {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-}
-
-#login_form > div {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-#login_form input {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #b8c4d3;
-    border-radius: 8px;
-    background-color: white;
-    font-size: 15px;
-}
-
-#login_form button {
-    padding: 12px;
-    border: none;
-    border-radius: 8px;
-    background-color: #233b5d;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-#login_screen p {
-    text-align: center;
-}
-
-
-/* Tela de cadastro */
-
-/* Tela de cadastro */
-#register_screen {
-    width: 650px;
-    max-width: 90%;
-    box-sizing: border-box;
-    padding: 35px;
-    margin: 40px auto;
-    gap: 25px;
-}
-
-#register_screen h2 {
-    text-align: center;
-    font-size: 26px;
-    margin-bottom: 8px;
-}
-
+#login_form,
 #register_form {
-    display: flex;
-    flex-direction: column;
     gap: 18px;
 }
 
+#login_form > div,
 #register_form > div {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-#register_form input {
+/* Campos de texto (seguem o tema claro/escuro) */
+:is(#login_form, #register_form, #entry_form) input,
+#search_password {
     width: 100%;
     padding: 12px;
-    border: 1px solid #b8c4d3;
+    border: 2px solid var(--color_itens);
     border-radius: 8px;
-    background-color: white;
-    font-size: 15px;
+    background-color: var(--color_bg_hl);
+    color: var(--color_text);
+    font-family: var(--font_text);
+    font-size: 16px;
 }
 
-#register_form button {
-    padding: 12px;
-    border: none;
+/* ---------- BOTÕES ---------- */
+/* Botões diretos da tela, botões dentro de formulários e botões dos itens do cofre */
+:is(main > button, main form button, .password_item button) {
+    padding: 13px;
+    border: 2px solid var(--color_itens);
     border-radius: 8px;
-    background-color: #233b5d;
-    color: white;
+    background-color: var(--color_background);
+    color: var(--color_text);
+    font-family: var(--font_text);
     font-size: 16px;
     cursor: pointer;
 }
 
-#register_screen p {
-    text-align: center;
+:is(main > button, main form button, .password_item button):hover {
+    background-color: var(--color_bg_select);
+    color: var(--color_background);
 }
 
-/* Tela do cofre */
-#vault_screen {
-    width: 650px;
-    max-width: 90%;
-    box-sizing: border-box;
-    padding: 35px;
-    margin: 40px auto;
-    gap: 25px;
+/* Botão principal (login e cadastro) */
+#login_form button,
+#register_form button {
+    background-color: var(--color_primary);
+    border-color: var(--color_primary);
+    color: #fff;
 }
 
-#vault_screen h2 {
-    text-align: center;
-    font-size: 28px;
-    margin-bottom: 10px;
+#login_form button:hover,
+#register_form button:hover {
+    background-color: var(--color_primary);
+    color: #fff;
+    filter: brightness(1.2);
 }
 
-#vault_screen .search_container {
-    width: 100%;
-}
-
-#vault_screen input {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 13px;
-    font-size: 16px;
-    border: 1px solid #b8c4d3;
-    border-radius: 8px;
-}
-
+/* ---------- COFRE ---------- */
 #password_list {
-    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
     min-height: 150px;
+    max-height: 50vh;
+    overflow-y: auto;
     padding: 20px;
-    box-sizing: border-box;
     border: 2px solid var(--color_itens);
     border-radius: 10px;
     background-color: var(--color_bg_hl);
@@ -292,76 +176,173 @@ form {
 
 #empty_vault {
     text-align: center;
-    padding: 35px 10px;
+    opacity: 0.7;
+    padding: 12px 0;
 }
 
-#vault_screen button {
-    width: 100%;
-    padding: 13px;
-    font-size: 16px;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-/* Tela do gerador */
-#generator_screen {
-    width: 650px;
-    max-width: 90%;
-    box-sizing: border-box;
-    padding: 35px;
-    margin: 40px auto;
-    gap: 25px;
-}
-
-#generator_screen .password_container {
-    width: 100%;
+.password_item {
     display: flex;
-}
-
-#generator_screen .password_return {
-    flex: 1;
-    width: auto;
-    height: 45px;
-    display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    padding: 8px;
-    font-size: 16px;
+    gap: 8px;
+    padding: 12px;
+    border: 2px solid var(--color_itens);
+    border-radius: 12px;
+    background-color: var(--color_bg_hl);
 }
 
-#generator_screen .btn_copy_password {
-    height: 45px;
-    padding: 5px 12px;
+.password_item h3,
+.password_item p {
+    flex-basis: 100%;
 }
 
+.password_item p {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.password_value {
+    flex: 1 1 100%;
+    font-family: monospace;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* Botões menores dentro de cada item (precisa vir depois da regra base dos botões) */
+.password_item button {
+    padding: 3px 10px;
+    font-size: 0.85rem;
+}
+
+/* ---------- FORMULÁRIO DE ADICIONAR/EDITAR ---------- */
+#entry_form div {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+}
+
+#entry_form label {
+    flex: 0 0 100%;
+}
+
+/* Precisa vir depois da regra compartilhada dos campos de texto */
+#entry_form input {
+    flex: 1 1 150px;
+    width: auto;
+}
+
+#entry_form div button {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+}
+
+/* ---------- GERADOR ---------- */
 #generator_screen form {
     gap: 22px;
 }
 
-#generator_screen #password_length {
-    padding: 12px;
-    font-size: 16px;
+.password_container {
+    display: flex;
+    margin-bottom: 12px;
 }
 
-#generator_screen .generate_btn,
-#generator_screen #btn_quick_password,
-#generator_screen #btn_back_vault {
-    padding: 13px;
+.password_return {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    height: 45px;
+    padding: 8px;
     font-size: 16px;
+    border: 2px solid var(--color_itens);
+    border-radius: 8px 0 0 8px;
+    background-color: var(--color_bg_hl);
+
+    /* Esconde parte da senha caso seja grande demais */
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.btn_copy_password {
+    height: 45px;
+    padding: 5px 12px;
+    border: 2px solid var(--color_itens);
+    border-left: 0;
+    border-radius: 0 8px 8px 0;
+    background-color: var(--color_background);
     cursor: pointer;
 }
 
-/*deixar "tamanho da senha" e "opções de senha" maior */
-#generator_screen .field_length label {
+.field_length {
+    display: flex;
+    justify-content: space-between;
+}
+
+.field_length label {
     font-size: 20px;
     font-weight: 600;
 }
 
-#generator_screen .field_options legend {
+.field_length input {
+    width: 50%;
+    padding: 12px;
+    font-size: 16px;
+    border: 2px solid var(--color_itens);
+    border-radius: 16px;
+    background-color: var(--color_bg_hl);
+    color: var(--color_text);
+}
+
+/* Opções de personalização */
+.field_options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border: none;
+}
+
+.field_options legend {
+    margin-bottom: 6px;
     font-size: 21px;
     font-weight: 600;
 }
 
-#generator_screen .option label {
-    font-size: 16px;
+.options_container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
 }
 
+.option {
+    flex: 1;
+}
+
+.option input {
+    display: none;
+}
+
+.option label {
+    display: block;
+    padding: 4px 8px;
+    border: solid 2px var(--color_itens);
+    border-radius: 16px;
+    font-size: 16px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.option input:checked + label {
+    background-color: var(--color_bg_select);
+    color: var(--color_background);
+}
+
+#btn_quick_password,
+#btn_use_password {
+    margin-top: 10px;
+}
+
+#btn_use_password {
+    padding: 1rem 0.5rem;
+}
