@@ -4,6 +4,8 @@ const registerScreen = document.getElementById("register_screen");
 const vaultScreen = document.getElementById("vault_screen");
 const entryScreen = document.getElementById("entry_screen");
 const generatorScreen = document.getElementById("generator_screen");
+const changePasswordScreen = document.getElementById("change_password_screen");
+const deleteAccountScreen = document.getElementById("delete_account_screen");
 
 const appHeader = document.getElementById("app_header");
 const generatorHeader = document.getElementById("generator_header");
@@ -14,6 +16,8 @@ export const screens = {
     vault: vaultScreen,
     entry: entryScreen,
     generator: generatorScreen,
+    changePassword: changePasswordScreen,
+    deleteAccount: deleteAccountScreen,
 };
 
 export function showScreen(screen) {

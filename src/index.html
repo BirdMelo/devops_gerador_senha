@@ -16,7 +16,12 @@
     <!-- Cabeçalho principal -->
     <header id="app_header">
         <h1>COFRE DE SENHAS</h1>
+
+        <button type="button" class="btn_theme">
+            <img class="theme_icon" src="./img/dark_mode_icon.svg" alt="Ativar modo escuro">
+        </button>
     </header>
+
 
     <!-- Tela de login -->
     <main id="login_screen">
@@ -33,7 +38,7 @@
                 <input type="password" id="master_password" required>
             </div>
 
-            <button type="submit">Entrar</button>
+            <button class="btn_100" type="submit">Entrar</button>
         </form>
 
         <p id="login_error" hidden></p>
@@ -78,8 +83,7 @@
         <h2>Minhas senhas</h2>
 
         <div class="search_container">
-            <input type="search" id="search_password"
-                placeholder="Pesquisar por serviço...">
+            <input type="search" id="search_password" placeholder="Pesquisar por serviço...">
         </div>
 
         <section id="password_list">
@@ -95,6 +99,9 @@
         <button type="button" id="btn_open_generator">
             Gerar senha
         </button>
+
+        <button type="button" id="btn_open_change_password">Alterar senha mestra</button>
+        <button type="button" id="btn_open_delete_account">Excluir conta</button>
 
         <button type="button" id="btn_logout">
             Sair da conta
@@ -134,8 +141,8 @@
     <header id="generator_header" hidden>
         <h1>GERADOR DE SENHAS</h1>
 
-        <button type="button" id="btn_theme">
-            <img id="theme_icon" src="./img/dark_mode_icon.svg" alt="Ativar modo escuro">
+        <button type="button" class="btn_theme">
+            <img class="theme_icon" src="./img/dark_mode_icon.svg" alt="Ativar modo escuro">
         </button>
     </header>
 
@@ -186,7 +193,7 @@
                 </div>
             </fieldset>
 
-            <button type="submit" class="generate_btn" id="btn_generate_password">
+            <button type="submit" class="generate_btn btn_100" id="btn_generate_password">
                 Gerar senha
             </button>
 
