@@ -37,6 +37,9 @@ jobs:
     permissions:
       contents: read
       packages: write
+    outputs:
+      image: ${{ steps.image.outputs.name }}
+      version: ${{ steps.metadata.outputs.version }}
 
     steps:
       - name: Checkout do código
@@ -77,3 +80,12 @@ jobs:
           push: true
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
+
+  deploy-staging:
+    needs: publish
+    permissions:
+      contents: read
+      packages: read
+    uses: ./.github/workflows/deploy-staging.yml
+    with:
+      image_tag: ${{ needs.publish.outputs.version }}

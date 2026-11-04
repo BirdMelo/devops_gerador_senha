@@ -4,7 +4,7 @@ Aplicação web acadêmica desenvolvida na disciplina de DevOps do CEUB. O
 projeto gera senhas seguras, permite gerenciá-las em um cofre autenticado e
 mantém o código coberto por testes automatizados e integração contínua.
 
-**Versão atual: `v2.1.5`**
+**Próxima versão: `v2.1.6`**
 
 ## Funcionalidades entregues
 
@@ -47,6 +47,8 @@ mantém o código coberto por testes automatizados e integração contínua.
 ```text
 .
 ├── .github/workflows/ci.yml     # pipeline de integração contínua
+├── .github/workflows/release.yml # testes e publicação de imagem versionada
+├── .github/workflows/deploy-staging.yml # homologação simulada e rollback
 ├── backend/
 │   ├── app.js                   # configuração do Express e arquivos estáticos
 │   ├── server.js                # inicialização do servidor e do banco
@@ -66,6 +68,9 @@ mantém o código coberto por testes automatizados e integração contínua.
 │   └── app/                     # módulos do frontend
 ├── tests/                       # testes unitários e de integração
 ├── Dockerfile.test
+├── Dockerfile
+├── docker-compose.yml
+├── docker-compose.staging.yml
 ├── docker-compose.test.yml
 ├── docker-compose.coverage.yml
 ├── package.json
@@ -162,6 +167,31 @@ Ele usa Node.js 22, instala dependências com `npm ci`, executa os testes locais
 executa a integração com PostgreSQL e publica o relatório de cobertura como
 artefato do GitHub Actions.
 
+## Publicação, homologação e rollback
+
+O workflow `.github/workflows/release.yml` é acionado por tags `vX.Y.Z`. Ele
+executa os testes e, se aprovados, publica a imagem no GitHub Container Registry
+com tags semânticas e o SHA do commit. O workflow usa o `GITHUB_TOKEN` fornecido
+pelo GitHub Actions, com permissão de escrita no registry; não lê o `.env` e
+não usa as credenciais do Supabase.
+
+Após a publicação, `.github/workflows/deploy-staging.yml` inicia a imagem em um
+ambiente temporário com PostgreSQL de teste, verifica se a página inicial
+responde e remove os containers e dados ao terminar. Esse deploy é uma
+simulação em runner descartável, não um ambiente persistente. O banco e a chave
+usados nele são exclusivos de teste; nenhum dado real é utilizado.
+
+Para simular rollback, no GitHub abra **Actions > Deploy staging > Run
+workflow** e informe a versão semântica anterior já publicada, sem o prefixo
+`v` (por exemplo, `2.1.5`). O workflow sobe essa imagem anterior no mesmo
+ambiente temporário e executa a verificação. Em um deploy persistente, o
+rollback consiste em reapontar o serviço para a tag da última versão estável;
+esse projeto ainda não configura um servidor persistente de produção.
+
+Para executar localmente a aplicação conectada ao Supabase, use
+`docker-compose.yml` e as variáveis locais de `.env`. Não reutilize essas
+credenciais na simulação de homologação.
+
 ## Segurança e dados
 
 - Senhas mestras nunca são persistidas em texto puro; somente hashes bcrypt
@@ -189,7 +219,10 @@ artefato do GitHub Actions.
   testes de segurança e execução dos testes com PostgreSQL em Docker.
 - **v2.1.4 — documentação e versão:** documentação consolidada do estado atual
   do projeto e sincronização do versionamento nos manifestos npm.
-- **v2.1.5 — documentação e versão:** Preparação para imprementação de CD
+- **v2.1.5 — primeira publicação:** imagem versionada publicada no GitHub
+  Container Registry.
+- **v2.1.6 — entrega DevOps:** homologação simulada e fluxo de rollback
+  documentado.
 
 ## Fluxo de desenvolvimento
 
