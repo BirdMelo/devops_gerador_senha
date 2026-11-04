@@ -8,12 +8,16 @@ router.use(exigirSessao);
 router.post("/gerar", (req, res) => {
   const { tamanho, especiais, numeros } = req.body ?? {};
   const gerador = new GeradorSenha();
-  const senha = gerador.gerarSenha(
-    tamanho,
-    especiais ?? true,
-    numeros ?? true,
-  );
-  res.json({ senha });
+  try {
+    const senha = gerador.gerarSenha(
+      tamanho,
+      especiais ?? true,
+      numeros ?? true,
+    );
+    res.json({ senha });
+  } catch (error) {
+    res.status(400).json({ erro: error.message });
+  }
 });
 
 router.get("/auditoria", async (req, res) => {

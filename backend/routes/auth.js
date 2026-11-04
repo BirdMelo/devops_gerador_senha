@@ -14,6 +14,7 @@ router.post("/register", async (req, res) => {
     typeof nome !== "string" ||
     !nome.trim() ||
     !email ||
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
     typeof senhaMestra !== "string" ||
     senhaMestra.length < 8
   ) {
