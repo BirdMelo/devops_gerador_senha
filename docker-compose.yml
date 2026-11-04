@@ -1,0 +1,14 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: gerador-de-senhas:local
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      DATABASE_URL: "${DATABASE_URL:?Defina DATABASE_URL no arquivo .env}"
+      CHAVE_CRIPTOGRAFIA: "${CHAVE_CRIPTOGRAFIA:?Defina CHAVE_CRIPTOGRAFIA no arquivo .env}"
+    ports:
+      - "127.0.0.1:3000:3000"
+    restart: unless-stopped

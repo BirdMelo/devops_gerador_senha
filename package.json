@@ -1,6 +1,6 @@
 {
   "name": "gerador-de-senhas",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "description": "Gerador de senhas personalizadas - projeto acadêmico de DevOps (CEUB)",
   "scripts": {
     "test": "jest --testPathIgnorePatterns=backend-routes.test.js",

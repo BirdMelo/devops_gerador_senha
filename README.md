@@ -4,7 +4,7 @@ Aplicação web acadêmica desenvolvida na disciplina de DevOps do CEUB. O
 projeto gera senhas seguras, permite gerenciá-las em um cofre autenticado e
 mantém o código coberto por testes automatizados e integração contínua.
 
-**Versão atual: `v2.1.4`**
+**Versão atual: `v2.1.5`**
 
 ## Funcionalidades entregues
 
@@ -189,6 +189,7 @@ artefato do GitHub Actions.
   testes de segurança e execução dos testes com PostgreSQL em Docker.
 - **v2.1.4 — documentação e versão:** documentação consolidada do estado atual
   do projeto e sincronização do versionamento nos manifestos npm.
+- **v2.1.5 — documentação e versão:** Preparação para imprementação de CD
 
 ## Fluxo de desenvolvimento
 
