@@ -1,0 +1,29 @@
+services:
+  db-test:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: cofre_test
+      POSTGRES_USER: cofre_test
+      POSTGRES_PASSWORD: cofre_test
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cofre_test -d cofre_test"]
+      interval: 2s
+      timeout: 5s
+      retries: 15
+    tmpfs:
+      - /var/lib/postgresql/data
+    volumes:
+      - ./docker/schema.test.sql:/docker-entrypoint-initdb.d/001-schema.sql:ro
+
+  app:
+    image: "${APP_IMAGE:?APP_IMAGE deve indicar uma imagem GHCR versionada}"
+    depends_on:
+      db-test:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      DATABASE_URL: postgresql://cofre_test:cofre_test@db-test:5432/cofre_test
+      CHAVE_CRIPTOGRAFIA: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    ports:
+      - "127.0.0.1:3000:3000"
