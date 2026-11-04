@@ -6,6 +6,13 @@ on:
       image_tag:
         required: true
         type: string
+    secrets:
+      GITHUB_TOKEN:
+        required: true
+      STAGING_DB_PASSWORD:
+        required: true
+      STAGING_CRYPTO_KEY:
+        required: true
   workflow_dispatch:
     inputs:
       image_tag:
@@ -35,12 +42,24 @@ jobs:
         env:
           IMAGE_NAME: ${{ steps.image.outputs.name }}
           IMAGE_TAG: ${{ inputs.image_tag }}
+          STAGING_DB_PASSWORD: ${{ secrets.STAGING_DB_PASSWORD }}
+          STAGING_CRYPTO_KEY: ${{ secrets.STAGING_CRYPTO_KEY }}
         run: |
           if [[ ! "$IMAGE_TAG" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             echo "Informe uma versão no formato X.Y.Z, sem o prefixo v."
             exit 1
           fi
+          if [[ ! "$STAGING_DB_PASSWORD" =~ ^[a-fA-F0-9]{32}$ ]]; then
+            echo "Configure STAGING_DB_PASSWORD como 32 caracteres hexadecimais nos GitHub Secrets."
+            exit 1
+          fi
+          if [[ ! "$STAGING_CRYPTO_KEY" =~ ^[a-fA-F0-9]{64}$ ]]; then
+            echo "Configure STAGING_CRYPTO_KEY como 64 caracteres hexadecimais nos GitHub Secrets."
+            exit 1
+          fi
           echo "APP_IMAGE=$IMAGE_NAME:$IMAGE_TAG" >> "$GITHUB_ENV"
+          echo "STAGING_DB_PASSWORD=$STAGING_DB_PASSWORD" >> "$GITHUB_ENV"
+          echo "STAGING_CRYPTO_KEY=$STAGING_CRYPTO_KEY" >> "$GITHUB_ENV"
 
       - name: Entrar no GitHub Container Registry
         uses: docker/login-action@v3

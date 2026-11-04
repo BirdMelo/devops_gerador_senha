@@ -177,9 +177,28 @@ não usa as credenciais do Supabase.
 
 Após a publicação, `.github/workflows/deploy-staging.yml` inicia a imagem em um
 ambiente temporário com PostgreSQL de teste, verifica se a página inicial
-responde e remove os containers e dados ao terminar. Esse deploy é uma
+responde e confirma acesso ao banco antes de remover containers e dados. Esse deploy é uma
 simulação em runner descartável, não um ambiente persistente. O banco e a chave
 usados nele são exclusivos de teste; nenhum dado real é utilizado.
+
+Antes de publicar uma versão, cadastre em **GitHub > Settings > Secrets and
+variables > Actions** dois *repository secrets* para a homologação:
+
+- `STAGING_DB_PASSWORD`: 32 caracteres hexadecimais aleatórios.
+- `STAGING_CRYPTO_KEY`: 64 caracteres hexadecimais aleatórios.
+
+Para gerar valores localmente sem reutilizar as credenciais do Supabase, rode
+no PowerShell:
+
+```powershell
+node -e "console.log(require('node:crypto').randomBytes(16).toString('hex'))"
+node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"
+```
+
+Cadastre a primeira saída como `STAGING_DB_PASSWORD` e a segunda como
+`STAGING_CRYPTO_KEY`. Não as coloque no repositório nem as envie em mensagens.
+O workflow valida o formato e injeta os valores somente nos containers
+temporários de homologação; não use aqui os valores reais do `.env`.
 
 Para simular rollback, no GitHub abra **Actions > Deploy staging > Run
 workflow** e informe a versão semântica anterior já publicada, sem o prefixo

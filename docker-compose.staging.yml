@@ -4,7 +4,7 @@ services:
     environment:
       POSTGRES_DB: cofre_test
       POSTGRES_USER: cofre_test
-      POSTGRES_PASSWORD: cofre_test
+      POSTGRES_PASSWORD: "${STAGING_DB_PASSWORD:?Configure STAGING_DB_PASSWORD nos GitHub Secrets}"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U cofre_test -d cofre_test"]
       interval: 2s
@@ -23,7 +23,7 @@ services:
     environment:
       NODE_ENV: production
       PORT: "3000"
-      DATABASE_URL: postgresql://cofre_test:cofre_test@db-test:5432/cofre_test
-      CHAVE_CRIPTOGRAFIA: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+      DATABASE_URL: "postgresql://cofre_test:${STAGING_DB_PASSWORD:?Configure STAGING_DB_PASSWORD nos GitHub Secrets}@db-test:5432/cofre_test"
+      CHAVE_CRIPTOGRAFIA: "${STAGING_CRYPTO_KEY:?Configure STAGING_CRYPTO_KEY nos GitHub Secrets}"
     ports:
       - "127.0.0.1:3000:3000"
