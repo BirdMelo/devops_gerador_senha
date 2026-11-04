@@ -107,6 +107,51 @@
             Sair da conta
         </button>
     </main>
+
+    <!-- Tela de alteração da senha mestra -->
+    <main id="change_password_screen" hidden>
+        <h2>Alterar senha mestra</h2>
+
+        <form id="change_password_form">
+            <div>
+                <label for="current_password">Senha mestra atual:</label>
+                <input type="password" id="current_password" required>
+            </div>
+
+            <div>
+                <label for="new_master_password">Nova senha mestra:</label>
+                <input type="password" id="new_master_password" minlength="8" required>
+            </div>
+
+            <div>
+                <label for="confirm_new_password">Confirmar nova senha mestra:</label>
+                <input type="password" id="confirm_new_password" minlength="8" required>
+            </div>
+
+            <p id="change_password_error" hidden></p>
+
+            <button type="submit">Alterar senha</button>
+            <button type="button" id="btn_cancel_change_password">Cancelar</button>
+        </form>
+    </main>
+
+    <!-- Tela de exclusão da conta -->
+    <main id="delete_account_screen" hidden>
+        <h2>Excluir conta</h2>
+
+        <form id="delete_account_form">
+            <div>
+                <label for="delete_password">Senha mestra:</label>
+                <input type="password" id="delete_password" required>
+            </div>
+
+            <p id="delete_account_error" hidden></p>
+
+            <button type="submit">Excluir conta</button>
+            <button type="button" id="btn_cancel_delete_account">Cancelar</button>
+        </form>
+    </main>
+
 <!-- Tela de cadastro e edição de senha -->
 <main id="entry_screen" hidden>
     <h2 id="entry_title">Nova senha</h2>

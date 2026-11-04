@@ -66,21 +66,23 @@ O projeto é composto por três frentes principais:
    npm install
    ```
 
-   Ou execute o setup completo, que instala as dependências, cria o `.env` e
-   preenche automaticamente uma chave aleatória para `CHAVE_CRIPTOGRAFIA`:
+   Ou execute o setup completo, que instala as dependências e cria o `.env`:
    ```bash
    npm run setup
    ```
 
-4. Configure `DATABASE_URL` no `.env` criado:
+4. Configure `CHAVE_CRIPTOGRAFIA` e `DATABASE_URL` no `.env` criado:
    ```bash
+   # Use uma chave permanente de 64 caracteres hexadecimais.
+   CHAVE_CRIPTOGRAFIA=sua_chave_de_64_caracteres_hex
    # Cole aqui a connection string PostgreSQL do Supabase.
    DATABASE_URL=sua_connection_string_do_supabase
    ```
 
 5. No arquivo `.env`, preencha `DATABASE_URL` com a connection string PostgreSQL
-   do Supabase. Execute o conteúdo de `schema.sql` no Supabase antes de iniciar
-   o backend.
+   do Supabase. Mantenha a mesma `CHAVE_CRIPTOGRAFIA` enquanto existirem senhas
+   armazenadas no banco. Execute o conteúdo de `schema.sql` no Supabase antes de
+   iniciar o backend.
 
    A variável precisa conter a URL completa, começando com `postgres://` ou
    `postgresql://`. Não use apenas o host, projeto ou uma senha isolada.
@@ -96,6 +98,28 @@ O projeto é composto por três frentes principais:
 ## Testes Automatizados
 
 Os testes são executados automaticamente pelo workflow definido em `.github/workflows/ci.yml` a cada alteração enviada ao repositório, garantindo o funcionamento contínuo da aplicação.
+
+### Comandos de teste
+
+```bash
+npm run test:unit           # testes unitários sem banco
+npm run test:integration    # integração do frontend com a API simulada
+npm run test:integration:db # rotas reais em PostgreSQL descartável via Docker
+npm run test:integration:db:local # rotas reais com PostgreSQL já configurado
+npm run test:all            # todos os testes locais sem banco
+npm run test:docker         # suíte com PostgreSQL descartável em Docker
+npm run test:coverage:docker # cobertura completa dentro do Docker
+```
+
+O comando `npm run test:integration:db` cria um PostgreSQL exclusivo para testes, usa uma
+chave de criptografia fixa apenas dentro do Compose e remove containers e volumes
+ao terminar. É necessário iniciar o Docker Desktop antes de executá-lo.
+
+`npm run test:integration:db:local` só deve ser usado quando `DATABASE_URL` estiver
+configurada para um PostgreSQL de testes. Não use a URL do banco de produção.
+
+O comando `npm run test:coverage:docker` executa todos os testes, incluindo as
+rotas reais com PostgreSQL, e salva o relatório em `coverage/`.
 
 Usuários, senhas do cofre e sessões são persistidos no PostgreSQL do Supabase.
 Os tokens são armazenados apenas como hash e as sessões expiram após oito horas

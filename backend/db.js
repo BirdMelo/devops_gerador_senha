@@ -26,13 +26,15 @@ function obterUrlBanco() {
     );
   }
 
-  return url;
+  return { url, host: urlValida.hostname };
 }
 
 export function configurarBanco() {
+  const { url, host } = obterUrlBanco();
+  const bancoLocal = ["localhost", "127.0.0.1", "::1", "db-test"].includes(host);
   const pool = new Pool({
-    connectionString: obterUrlBanco(),
-    ssl: { rejectUnauthorized: false },
+    connectionString: url,
+    ssl: bancoLocal ? false : { rejectUnauthorized: false },
   });
 
   Banco.configurar(criarAdaptadorPostgres(pool));
