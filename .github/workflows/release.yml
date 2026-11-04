@@ -89,3 +89,7 @@ jobs:
     uses: ./.github/workflows/deploy-staging.yml
     with:
       image_tag: ${{ needs.publish.outputs.version }}
+    secrets:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      STAGING_DB_PASSWORD: ${{ secrets.STAGING_DB_PASSWORD }}
+      STAGING_CRYPTO_KEY: ${{ secrets.STAGING_CRYPTO_KEY }}
