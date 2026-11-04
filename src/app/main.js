@@ -1,6 +1,7 @@
 import { generatePassword, generateQuickPassword } from "./password-generator.js";
 import "./dark-mode.js";
 import "./auth.js";
+import "./account.js";
 
 const passwordForm = document.getElementById("password_form");
 const quickPasswordButton = document.getElementById("btn_quick_password");

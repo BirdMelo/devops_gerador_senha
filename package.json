@@ -3,9 +3,17 @@
   "version": "1.0.0",
   "description": "Gerador de senhas personalizadas - projeto acadêmico de DevOps (CEUB)",
   "scripts": {
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
+    "test": "jest --testPathIgnorePatterns=backend-routes.test.js",
+    "test:unit": "jest --testPathIgnorePatterns=\"auth-navigation.test.js|backend-routes.test.js\"",
+    "test:integration": "jest tests/auth-navigation.test.js",
+    "test:integration:db": "node scripts/test-docker.cjs",
+    "test:integration:db:local": "jest tests/backend-routes.test.js --runInBand",
+    "test:all": "jest --testPathIgnorePatterns=backend-routes.test.js",
+    "test:docker": "node scripts/test-docker.cjs",
+    "test:coverage:docker": "node scripts/test-docker.cjs coverage",
+    "test:coverage:all:local": "jest --coverage --runInBand",
+    "test:watch": "jest --watch --testPathIgnorePatterns=backend-routes.test.js",
+    "test:coverage": "jest --coverage --testPathIgnorePatterns=backend-routes.test.js",
     "setup": "npm install && node scripts/setup-env.cjs",
     "start": "node --env-file=.env backend/server.js",
     "dev": "node --watch --env-file=.env backend/server.js"
@@ -22,6 +30,7 @@
     "babel-jest": "^29.7.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
-    "nodemon": "^3.1.14"
+    "nodemon": "^3.1.14",
+    "supertest": "^7.3.1"
   }
 }

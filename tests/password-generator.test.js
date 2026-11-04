@@ -86,6 +86,11 @@ describe("generatePassword (personalizada)", () => {
         setOptions({ length: -5, upper: true });
         expect(pg.generatePassword()).toBe("Escolha ao menos um tipo de caractere.");
     });
+
+    test("retorna mensagem de aviso quando o campo de tamanho está vazio", () => {
+        setOptions({ length: "", lower: true });
+        expect(pg.generatePassword()).toBe("Escolha ao menos um tipo de caractere.");
+    });
 });
 
 describe("generateQuickPassword (não personalizada)", () => {

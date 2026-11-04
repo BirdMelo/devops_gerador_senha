@@ -14,10 +14,12 @@ export async function api(path, { method = "GET", body } = {}) {
         body: body && JSON.stringify(body),
     });
 
-    const data = response.status === 204 ? null : await response.json();
+    const data = response.status === 204 ? null : await response.json().catch(() => null);
 
     if (!response.ok) {
-        const error = new Error(data?.erro || "Erro inesperado.");
+        const error = new Error(
+            data?.erro || `O servidor retornou uma resposta inválida (HTTP ${response.status}).`,
+        );
         error.status = response.status;
         throw error;
     }

@@ -8,12 +8,16 @@ router.use(exigirSessao);
 router.post("/gerar", (req, res) => {
   const { tamanho, especiais, numeros } = req.body ?? {};
   const gerador = new GeradorSenha();
-  const senha = gerador.gerarSenha(
-    tamanho,
-    especiais ?? true,
-    numeros ?? true,
-  );
-  res.json({ senha });
+  try {
+    const senha = gerador.gerarSenha(
+      tamanho,
+      especiais ?? true,
+      numeros ?? true,
+    );
+    res.json({ senha });
+  } catch (error) {
+    res.status(400).json({ erro: error.message });
+  }
 });
 
 router.get("/auditoria", async (req, res) => {
@@ -50,16 +54,23 @@ function dadosValidos({ servico, descricao, senha }) {
 
 // Listar, com busca opcional
 router.get("/", async (req, res) => {
-  const busca =
-    typeof req.query.busca === "string" ? req.query.busca.toLowerCase() : "";
-  const lista = (await req.usuario.listarSenhas())
-    .filter(
-      (s) =>
-        s.servico.toLowerCase().includes(busca) ||
-        s.descricao.toLowerCase().includes(busca)
-    )
-    .map(paraResposta);
-  res.json(lista);
+  try {
+    const busca =
+      typeof req.query.busca === "string" ? req.query.busca.toLowerCase() : "";
+    const lista = (await req.usuario.listarSenhas())
+      .filter(
+        (s) =>
+          s.servico.toLowerCase().includes(busca) ||
+          s.descricao.toLowerCase().includes(busca)
+      )
+      .map(paraResposta);
+    res.json(lista);
+  } catch (error) {
+    console.error("Não foi possível carregar o cofre:", error.message);
+    res.status(500).json({
+      erro: "Não foi possível descriptografar uma senha do cofre. Verifique a chave de criptografia configurada.",
+    });
+  }
 });
 
 // Cadastrar

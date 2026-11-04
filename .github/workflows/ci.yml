@@ -15,13 +15,22 @@ jobs:
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Instalar dependências
         run: npm ci
-      
-      # --runInBand reduz bastante o tempo dos testes.
-      # Sem isso demorou 41s por causa do custo de inicialização. Com isso, demorou 2s.
-      - name: Executar testes
-        run: npm test -- --runInBand
+
+      - name: Executar testes locais
+        run: npm run test:all -- --runInBand
+
+      - name: Executar integração com PostgreSQL e cobertura
+        run: npm run test:coverage:docker
+
+      - name: Publicar relatório de cobertura
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cobertura-jest
+          path: coverage/
+          if-no-files-found: warn
