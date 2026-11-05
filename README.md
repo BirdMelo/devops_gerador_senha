@@ -4,7 +4,7 @@ Aplicação web acadêmica desenvolvida na disciplina de DevOps do CEUB. O
 projeto gera senhas seguras, permite gerenciá-las em um cofre autenticado e
 mantém o código coberto por testes automatizados e integração contínua.
 
-**Próxima versão: `v2.1.6`**
+**Próxima versão: `v2.1.8`**
 
 ## Funcionalidades entregues
 
